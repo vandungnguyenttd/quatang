@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Đêm Sao Lung Linh</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="shooting-canvas"></canvas>
+  <div id="star-field"></div>
+<div id="rotate-warning">
+  <div class="phone-icon">
+    <div class="phone-body"></div>
+    <div class="rotate-icon"></div>
+  </div>
+</div>
+  <script src="script.js"></script>
+<script>
+  function checkOrientation() {
+    const warning = document.getElementById("rotate-warning");
+    if (window.innerHeight > window.innerWidth) {
+      warning.style.display = "flex";
+    } else {
+      warning.style.display = "none";
+    }
+  }
+
+  window.addEventListener("load", checkOrientation);
+  window.addEventListener("resize", checkOrientation);
+</script>
+</body>
+</html>
