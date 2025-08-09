@@ -380,11 +380,11 @@ function goToThirdContent() {
 
 // ===== Config mưa media (ảnh + video) =====
 const IMAGES_COUNT = 20; // số file img1..imgN
-const IMG_PATH_PREFIX = "/assets/images/img";
+const IMG_PATH_PREFIX = "./assets/images/img";
 const IMG_PATH_SUFFIX = ".jpg";
 
 const VIDEOS_COUNT = 6;  // số file video1..videoN
-const VIDEO_PATH_PREFIX = "/assets/video/video";
+const VIDEO_PATH_PREFIX = "./assets/video/video";
 const VIDEO_PATH_SUFFIX = ".mp4";
 
 // tỉ lệ xuất hiện video so với ảnh (0..1): 0.3 = 30% video, 70% ảnh
