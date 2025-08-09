@@ -34,7 +34,7 @@
 <div class="book">
   <div class="page">
     <div class="front cover">
-      <img src="/assets/images/img1.jpg" alt="img1">
+      <img src="./assets/images/img1.jpg" alt="img1">
     </div>
 <div class="back video-page">
   <video src="assets/video/video1.mp4" autoplay muted loop playsinline></video>
@@ -43,10 +43,20 @@
   </div>
 
   <div class="page">
-    <div class="front">
-      <p>Even more, the book height is dicated by the amount of content in the tallest page.
-        The only thing you need to take care of is how much text you put into a page.</p>
+<div class="front">
+  <div class="two-col">
+    <!-- Cột 1: 1 ảnh -->
+    <figure class="col-left">
+      <img src="./assets/images/img5.jpg" alt="Left">
+    </figure>
+
+    <!-- Cột 2: 2 ảnh -->
+    <div class="col-right">
+      <figure><img src="./assets/images/img3.jpg" alt="Top"></figure>
+      <figure><img src="./assets/images/img4.jpg" alt="Bottom"></figure>
     </div>
+  </div>
+</div>
     <div class="back">
       <img src="https://picsum.photos/id/24/600/600" alt="Img 1">
       <div class="video-caption">Nội dung mô tả video ở đây</div>
@@ -55,46 +65,116 @@
 
   <div class="page">
     <div class="front">
-      <h2>JS at its minimum</h2>
-      <p>JavaScript is at its minimum. Basically it's only used to set the initial
-        page index and assign click listeners to the pages. Modifies the CSS <b>Var</b>
-        for the <i>current</i> page, and the rest is handled entirely by CSS.</p>
+      <img src="./assets/images/img1.jpg" alt="Ảnh minh họa">
+      <div class="image-caption">Nội dung mô tả ảnh ở đây</div>
     </div>
-    <div class="back">
-      <p>Additionally JavaScript allows you to click on an anchor link in your
-        text — without turning the page. You can also have multiple independent
-        flip books in a single document. You're all covered.</p>
+    <div class="back video-page">
+      <video src="./assets/video/video3.mp4" autoplay muted loop playsinline></video>
+      <div class="video-caption">Nội dung mô tả video 3</div>
     </div>
   </div>
 
   <div class="page">
-    <div class="front">
-      <h2>Crafting CSS magic</h2>
-      <p>The opened (<i>viewing</i>) pages of the flip book are always kept at the same elevation.
-      This is necessary if your book has no inclination (is top-down-view).
-      Have you noticed that you can also click on the pages edge? CSS will nicely animate the group
-        of pages to skip with a staggered animation.</p>
+    <div class="front video-page">
+      <video src="./assets/video/video2.mp4" autoplay muted loop playsinline></video>
+      <div class="video-caption">Nội dung mô tả video 2</div>
     </div>
-    <div class="back">
-      <p>Like in this demo, you can change the perspective of the parent container and change the
-        X axis rotation of the book for extra effect.</p>
+    <div class="back four-images">
+      <div class="grid-4">
+        <figure><img src="./assets/images/img1.jpg" alt="Ảnh 1"></figure>
+        <figure><img src="./assets/images/img2.jpg" alt="Ảnh 2"></figure>
+        <figure><img src="./assets/images/img3.jpg" alt="Ảnh 3"></figure>
+        <figure><img src="./assets/images/img4.jpg" alt="Ảnh 4"></figure>
+      </div>
     </div>
   </div>
   
   <div class="page">
-    <div class="front">
-      <p>The necessary FlipBook's CSS is barely 30 lines, there is no swipe, natural page flip angling,
-        complex shadows, etc. in order to keep it as simple as possible.</p>
+    <div class="front four-videos">
+      <div class="grid-4">
+        <figure>
+          <video src="./assets/video/video1.mp4" autoplay muted loop playsinline></video>
+        </figure>
+        <figure>
+          <video src="./assets/video/video2.mp4" autoplay muted loop playsinline></video>
+        </figure>
+        <figure>
+          <video src="./assets/video/video3.mp4" autoplay muted loop playsinline></video>
+        </figure>
+        <figure>
+          <video src="./assets/video/video1.mp4" autoplay muted loop playsinline></video>
+        </figure>
+      </div>
     </div>
-    <div class="back">
-      <p>Feel free to use and abuse this code. Drop me a line if you find it cool or useful, or just
-        want to say <i>hi</i>.</p>
+    <div class="back media-25">
+      <div class="grid-25">
+        <!-- Thay src cho đúng file của bạn. Có thể trộn video & ảnh tùy ý -->
+        <figure><video src="./assets/video/video1.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><video src="./assets/video/video2.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><img src="./assets/images/img1.jpg"  alt="img1"></figure>
+        <figure><img src="./assets/images/img2.jpg"  alt="img2"></figure>
+        <figure><img src="./assets/images/img3.jpg"  alt="img3"></figure>
+
+        <figure><video src="./assets/video/video3.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><img src="./assets/images/img4.jpg"  alt="img4"></figure>
+        <figure><img src="./assets/images/img5.jpg"  alt="img5"></figure>
+        <figure><video src="./assets/video/video4.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><img src="./assets/images/img6.jpg"  alt="img6"></figure>
+
+        <figure><img src="./assets/images/img7.jpg"  alt="img7"></figure>
+        <figure><video src="./assets/video/video5.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><img src="./assets/images/img8.jpg"  alt="img8"></figure>
+        <figure><img src="./assets/images/img1.jpg"  alt="img9"></figure>
+        <figure><video src="./assets/video/video1.mp4" autoplay muted loop playsinline></video></figure>
+
+        <figure><img src="./assets/images/img2.jpg" alt="img10"></figure>
+        <figure><img src="./assets/images/img3.jpg" alt="img11"></figure>
+        <figure><video src="./assets/video/video2.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><img src="./assets/images/img4.jpg" alt="img12"></figure>
+        <figure><img src="./assets/images/img5.jpg" alt="img13"></figure>
+
+        <figure><video src="./assets/video/video3.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><img src="./assets/images/img6.jpg" alt="img14"></figure>
+        <figure><img src="./assets/images/img7.jpg" alt="img15"></figure>
+        <figure><video src="./assets/video/video1.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><img src="./assets/images/img8.jpg" alt="img16"></figure>
+      </div>
     </div>
   </div>
     <div class="page">
-    <div class="front">
-      <p>The necessary FlipBook's CSS is barely 30 lines, there is no swipe, natural page flip angling,
-        complex shadows, etc. in order to keep it as simple as possible.</p>
+    <div class="front media-25">
+      <div class="grid-25">
+        <!-- Thay src cho đúng file của bạn; có thể trộn ảnh & video -->
+        <figure><video src="./assets/video/video1.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><video src="./assets/video/video2.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><img src="./assets/images/img1.jpg"  alt="img1"></figure>
+        <figure><img src="./assets/images/img2.jpg"  alt="img2"></figure>
+        <figure><img src="./assets/images/img3.jpg"  alt="img3"></figure>
+
+        <figure><video src="./assets/video/video3.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><img src="./assets/images/img4.jpg"  alt="img4"></figure>
+        <figure><img src="./assets/images/img5.jpg"  alt="img5"></figure>
+        <figure><video src="./assets/video/video1.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><img src="./assets/images/img6.jpg"  alt="img6"></figure>
+
+        <figure><img src="./assets/images/img7.jpg"  alt="img7"></figure>
+        <figure><video src="./assets/video/video2.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><img src="./assets/images/img8.jpg"  alt="img8"></figure>
+        <figure><img src="./assets/images/img1.jpg"  alt="img9"></figure>
+        <figure><video src="./assets/video/video3.mp4" autoplay muted loop playsinline></video></figure>
+
+        <figure><img src="./assets/images/img2.jpg" alt="img10"></figure>
+        <figure><img src="./assets/images/img3.jpg" alt="img11"></figure>
+        <figure><video src="./assets/video/video1.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><img src="./assets/images/img4.jpg" alt="img12"></figure>
+        <figure><img src="./assets/images/img5.jpg" alt="img13"></figure>
+
+        <figure><video src="./assets/video/video2.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><img src="./assets/images/img6.jpg" alt="img14"></figure>
+        <figure><img src="./assets/images/img7.jpg" alt="img15"></figure>
+        <figure><video src="./assets/video/video3.mp4" autoplay muted loop playsinline></video></figure>
+        <figure><img src="./assets/images/img8.jpg" alt="img16"></figure>
+      </div>
     </div>
     <div class="back">
       <p>Feel free to use and abuse this code. Drop me a line if you find it cool or useful, or just
