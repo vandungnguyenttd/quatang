@@ -1,4 +1,9 @@
 body {
+  font-family: 'Great Vibes', cursive;
+}
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+body {
   margin: 0;
   padding: 0;
   background-color: black;
@@ -334,8 +339,9 @@ body {
 .book {
   position: relative;
   display: flex;
-  width: min(72vw, 81vh); /* giảm 10% so với bản gốc */
-  max-width: 900px;       /* giảm max-width tương ứng */
+  height: 80vh;                 /* 🔹 Chiều cao cố định tối đa */
+  width: 80vh;                  /* Tự tính theo tỷ lệ trang */
+  max-height: 70vh;
   pointer-events: none;
   transform-style: preserve-3d;
   transition: translate 1s;
@@ -461,6 +467,8 @@ body {
 }
 
 #nextButton {
+  opacity: 0;                  /* ban đầu ẩn */
+  pointer-events: none;        /* không click khi ẩn */
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -473,9 +481,134 @@ body {
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
   z-index: 30;
-  transition: transform 0.2s ease;
+  transition: opacity 1s ease; /* hiệu ứng mờ dần */
+}
+
+#nextButton.visible {
+  opacity: 1;             /* hiện rõ */
+  pointer-events: auto;   /* cho click */
 }
 
 #nextButton:hover {
   transform: scale(1.05);
+}
+
+/* Giao diện 3 full màn, căn giữa nếu cần */
+#thirdContent {
+  position: fixed;
+  inset: 0;
+  display: flex;              /* bạn có thể đổi sang block nếu muốn */
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  z-index: 20;
+}
+
+/* Lớp mưa chữ */
+.content-rain{
+  position:absolute; inset:0;
+  pointer-events:none;
+  overflow: visible;                     /* cho phép tràn cả trái/phải & dưới */
+  z-index:25;
+}
+
+.rain-item {
+  position: absolute;
+  top: -10vh;
+  left: 0;
+  transform: translateX(-50%);
+  font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+  font-weight: 700;
+  font-size: clamp(16px, 2.2vw, 28px);
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0,0,0,.45);
+  opacity: 0.95;
+  animation: drop var(--dur, 3s) linear forwards;
+  pointer-events: none;
+  color: #ff66b2;
+}
+
+.rain-item .label,
+.rain-item .ghost {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.rain-item .label {
+  font-family: 'Great Vibes', cursive;
+  color: #ff66b2;
+  font-weight: bold;
+  opacity: var(--itemAlpha, 1);
+  text-shadow:
+    0 0 4px   rgba(255,102,178,0.9),
+    0 0 8px   rgba(255,102,178,0.7),
+    0 0 16px  rgba(255,102,178,0.5),
+    0 0 32px  rgba(255,102,178,0.3),
+    0 0 48px  rgba(255,102,178,0.15);
+}
+
+
+/* Các bóng (ghost) không viền sáng, chỉ hồng mờ */
+.rain-item .ghost {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.2rem;
+  color: #ff66b2;
+  opacity: var(--alpha, 0.5);
+  text-shadow: none;
+}
+
+.rain-item .ghost {
+  -webkit-text-stroke: 0 transparent;
+  text-shadow: none;
+  opacity: var(--alpha, .3);
+}
+
+/* Rơi tới vị trí do JS đặt trong --endY (40–100vh) */
+@keyframes drop {
+  0%   { transform: translate(-50%, -20vh); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translate(-50%, var(--endY, 100vh)); opacity: 1; }
+}
+
+
+/* Toàn màn cho container mưa ảnh */
+#thirdContent { overflow: visible; }     /* cho phép tràn dưới */
+/* Container mưa media (ảnh + video) */
+.media-rain{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;         /* tràn trái/phải & dưới */
+  z-index: 26;               /* trên mưa chữ một lớp */
+}
+
+/* Item chung */
+.rain-media{
+  position: absolute;
+  top: -10vh;
+  left: 0;
+  transform: translateX(-50%);
+  animation: drop var(--dur, 3s) linear forwards; /* giữ trạng thái cuối */
+  filter: drop-shadow(0 6px 16px rgba(0,0,0,.45));
+  opacity: .98;
+}
+
+/* Ảnh trong media */
+.rain-media img{
+  display: block;
+  width: var(--w, 120px);
+  height: var(--h, 160px);
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Video trong media */
+.rain-media video{
+  display: block;
+  width: var(--w, 120px);
+  height: var(--h, 160px);
+  object-fit: cover;
+  border-radius: 10px;
 }

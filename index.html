@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Đêm Sao Lung Linh</title>
   <link rel="stylesheet" href="./style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
 <body>
   <div id="heart-container"></div>
@@ -20,7 +21,7 @@
   <div id="mainContent">
     <div class="center-content">
       <img src="/assets/avatar.jpg" alt="Avatar" class="avatar-image">
-      <h1 class="main-title">Gửi Người Anh Thương</h1>
+      <h1 class="main-title">Content page</h1>
       <button class="start-button" onclick="handleStart()">💫 BẮT ĐẦU</button>
     </div>
     <div id="heart-container"></div>
@@ -35,10 +36,10 @@
     <div class="front cover">
       <img src="/assets/images/img1.jpg" alt="img1">
     </div>
-    <div class="back">
-      <h2>Responsive</h2>
-      <p>Fully responsive CSS flip book, thanks to the <code>cqmin</code> unit.</p>
-    </div>
+<div class="back video-page">
+  <video src="assets/video/video1.mp4" autoplay muted loop playsinline></video>
+  <div class="video-caption">Nội dung mô tả video ở đây</div>
+</div>
   </div>
 
   <div class="page">
@@ -48,6 +49,7 @@
     </div>
     <div class="back">
       <img src="https://picsum.photos/id/24/600/600" alt="Img 1">
+      <div class="video-caption">Nội dung mô tả video ở đây</div>
     </div>
   </div>
 
@@ -89,6 +91,16 @@
         want to say <i>hi</i>.</p>
     </div>
   </div>
+    <div class="page">
+    <div class="front">
+      <p>The necessary FlipBook's CSS is barely 30 lines, there is no swipe, natural page flip angling,
+        complex shadows, etc. in order to keep it as simple as possible.</p>
+    </div>
+    <div class="back">
+      <p>Feel free to use and abuse this code. Drop me a line if you find it cool or useful, or just
+        want to say <i>hi</i>.</p>
+    </div>
+  </div>
 
   <div class="page">
     <div class="front">
@@ -103,11 +115,14 @@
   </div>
 </div>
 </div>
-<button id="nextButton" onclick="goToThirdContent()">Next ➡</button>
-
+  <button id="nextButton" onclick="goToThirdContent()">Next ➡</button>
 </div>
-<div id="thirdContent" style="display: none;">
-  <h1 style="color:white; text-align:center;">Đây là giao diện thứ 3</h1>
+
+
+<div id="thirdContent" style="display:none;">
+  <div class="content-rain" aria-hidden="true"></div>
+  <div class="media-rain" aria-hidden="true"></div>
+
 </div>
 
 
