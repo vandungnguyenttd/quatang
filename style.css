@@ -1,896 +1,1097 @@
 body {
-  font-family: 'Great Vibes', cursive;
+    font-family: "Great Vibes", cursive;
 }
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap");
 
 body {
-  margin: 0;
-  padding: 0;
-  background-color: black;
-  overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    overflow: hidden;
 }
 
 #star-field {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
 }
 
 /* ⭐ Ngôi sao mặc định: tròn trắng sáng */
 .star {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.8;
-  animation: twinkle infinite;
-  box-shadow: 0 0 8px white;
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: twinkle infinite;
+    box-shadow: 0 0 8px white;
 }
 
 /* 🌟 Hiệu ứng nhấp nháy */
 @keyframes twinkle1 {
-  0%, 100% { opacity: 0.9; transform: scale(1); }
-  50%      { opacity: 0.3; transform: scale(1.4); }
+    0%,
+    100% {
+        opacity: 0.9;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.3;
+        transform: scale(1.4);
+    }
 }
 @keyframes twinkle2 {
-  0%, 100% { opacity: 0.8; transform: scale(1); }
-  50%      { opacity: 0.5; transform: scale(1.2); }
+    0%,
+    100% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
 }
 @keyframes twinkle3 {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.2; transform: scale(1.3); }
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.2;
+        transform: scale(1.3);
+    }
 }
 @keyframes twinkle4 {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  50%      { opacity: 0.4; transform: scale(1.5); }
+    0%,
+    100% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.4;
+        transform: scale(1.5);
+    }
 }
 @keyframes twinkle5 {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.6; transform: scale(1.25); }
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(1.25);
+    }
 }
 
 /* ⭐ Ngôi sao 4 cánh */
 .star.star-4::before,
 .star.star-4::after {
-  content: "";
-  position: absolute;
-  background: white;
-  opacity: 0.8;
+    content: "";
+    position: absolute;
+    background: white;
+    opacity: 0.8;
 }
 
 .star.star-4::before {
-  width: 100%;
-  height: 2px;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
+    width: 100%;
+    height: 2px;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
 }
 
 .star.star-4::after {
-  width: 2px;
-  height: 100%;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 /* ⭐ Ngôi sao 5 cánh */
 .star.star-5 {
-  clip-path: polygon(
-    50% 0%,
-    61% 35%,
-    98% 35%,
-    68% 57%,
-    79% 91%,
-    50% 70%,
-    21% 91%,
-    32% 57%,
-    2% 35%,
-    39% 35%
-  );
+    clip-path: polygon(
+        50% 0%,
+        61% 35%,
+        98% 35%,
+        68% 57%,
+        79% 91%,
+        50% 70%,
+        21% 91%,
+        32% 57%,
+        2% 35%,
+        39% 35%
+    );
 }
 
 /* ⭐ Ngôi sao 6 cánh */
 .star.star-6 {
-  clip-path: polygon(
-    50% 0%, 60% 30%, 90% 30%,
-    65% 50%, 90% 70%, 60% 70%,
-    50% 100%, 40% 70%, 10% 70%,
-    35% 50%, 10% 30%, 40% 30%
-  );
+    clip-path: polygon(
+        50% 0%,
+        60% 30%,
+        90% 30%,
+        65% 50%,
+        90% 70%,
+        60% 70%,
+        50% 100%,
+        40% 70%,
+        10% 70%,
+        35% 50%,
+        10% 30%,
+        40% 30%
+    );
 }
 
 /* Giao diện cảnh báo xoay ngang */
 #rotate-warning {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  width: 100vw;
-  height: 100vh;
-  background: black;
-  color: white;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    color: white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
 }
 
 /* Icon điện thoại */
 .phone-icon {
-  position: relative;
-  width: 80px;
-  height: 140px;
-  border: 4px solid white;
-  border-radius: 15px;
-  box-shadow: 0 0 10px white;
-  background-color: #111;
-  animation: tilt 2s infinite ease-in-out;
+    position: relative;
+    width: 80px;
+    height: 140px;
+    border: 4px solid white;
+    border-radius: 15px;
+    box-shadow: 0 0 10px white;
+    background-color: #111;
+    animation: tilt 2s infinite ease-in-out;
 }
 
 .phone-body::before {
-  content: '';
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 30px;
-  height: 5px;
-  background: white;
-  border-radius: 3px;
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 5px;
+    background: white;
+    border-radius: 3px;
 }
 
 .phone-body::after {
-  content: '';
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 10px;
-  height: 10px;
-  background: white;
-  border-radius: 50%;
+    content: "";
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
 }
 
 .rotate-icon {
-  position: absolute;
-  bottom: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 2rem;
-  animation: spin 2s infinite linear;
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    animation: spin 2s infinite linear;
 }
 
 @keyframes spin {
-  0%   { transform: translateX(-50%) rotate(0deg); }
-  100% { transform: translateX(-50%) rotate(360deg); }
+    0% {
+        transform: translateX(-50%) rotate(0deg);
+    }
+    100% {
+        transform: translateX(-50%) rotate(360deg);
+    }
 }
 
 @keyframes tilt {
-  0%, 100% { transform: rotate(0deg); }
-  50%      { transform: rotate(90deg); }
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(90deg);
+    }
 }
 
 #shooting-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1;
 }
 
 #heart-container {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 5;
-  overflow: hidden;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
 }
 
 .heart {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%) translateY(0);
-  font-size: 24px;
-  opacity: 0.9;
-  animation: flyUp 4s ease-out forwards;
-  user-select: none;
-  will-change: transform, opacity;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%) translateY(0);
+    font-size: 24px;
+    opacity: 0.9;
+    animation: flyUp 4s ease-out forwards;
+    user-select: none;
+    will-change: transform, opacity;
 }
 
 @keyframes flyUp {
-  0% {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-  }
-  70% {
-    transform: translateX(-50%) translateY(var(--offsetY));
-    opacity: 0.9;
-  }
-  100% {
-    transform: translateX(-50%) translateY(var(--offsetY)) scale(0.8);
-    opacity: 0;
-  }
+    0% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+    70% {
+        transform: translateX(-50%) translateY(var(--offsetY));
+        opacity: 0.9;
+    }
+    100% {
+        transform: translateX(-50%) translateY(var(--offsetY)) scale(0.8);
+        opacity: 0;
+    }
 }
 
-
 .center-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 10;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
 }
 
 .avatar-image {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
-  border: 3px solid white;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+    border: 3px solid white;
 }
 
 .main-title {
-  margin-top: 16px;
-  font-size: 1.8rem;
-  color: white;
-  text-shadow: 1px 1px 4px #000;
-  font-family: 'Segoe UI', sans-serif;
+    margin-top: 16px;
+    font-size: 1.8rem;
+    color: white;
+    text-shadow: 1px 1px 4px #000;
+    font-family: "Segoe UI", sans-serif;
 }
 
 .start-button {
-  margin-top: 16px;
-  padding: 12px 24px;
-  font-size: 1.1rem;
-  border: none;
-  border-radius: 30px;
-  background: #ff69b4;
-  color: white;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
-  transition: transform 0.2s ease;
+    margin-top: 16px;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 30px;
+    background: #ff69b4;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
+    transition: transform 0.2s ease;
 }
 
 .start-button:hover {
-  transform: scale(1.05);
+    transform: scale(1.05);
 }
-
 
 /* Mờ dần toàn bộ giao diện */
 .fade-out {
-  animation: fadeOutOnly 1.5s ease forwards;
+    animation: fadeOutOnly 1.5s ease forwards;
 }
 
 @keyframes fadeOutOnly {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
 }
 
 /* Mờ hiện giao diện mới */
 .fade-in {
-  animation: fadeInOnly 1.5s ease forwards;
+    animation: fadeInOnly 1.5s ease forwards;
 }
 
 @keyframes fadeInOnly {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
 
 /* FlipBook */
 
 #secondContent {
-  position: fixed; /* full màn hình */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  
-  display: flex;
-  justify-content: center; /* căn giữa ngang */
-  align-items: center;     /* căn giữa dọc */
-  
-  background: transparent; /* nền trong suốt */
+    position: fixed; /* full màn hình */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center; /* căn giữa ngang */
+    align-items: center; /* căn giữa dọc */
+
+    background: transparent; /* nền trong suốt */
 }
 
 body {
-  /* or any other parent wrapper */
-  margin: 0;
-  display: flex;
-  min-height: 100dvh;
-  perspective: 1000px;
-  font: 1em/1.4 "Poppins", sans-serif;
-  overflow: hidden;
-  color: hsl(180 68% 5%);
-  background-image: radial-gradient(circle farthest-corner at 50% 50%, hsl(187 20% 0%) 30%, hsl(149 20% 0%) 100%);
+    /* or any other parent wrapper */
+    margin: 0;
+    display: flex;
+    min-height: 100dvh;
+    perspective: 1000px;
+    font: 1em/1.4 "Poppins", sans-serif;
+    overflow: hidden;
+    color: hsl(180 68% 5%);
+    background-image: radial-gradient(
+        circle farthest-corner at 50% 50%,
+        hsl(187 20% 0%) 30%,
+        hsl(149 20% 0%) 100%
+    );
 }
 
 /* Khung bao để căn giữa */
 .book-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  perspective: 1000px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    perspective: 1000px;
 }
 
 .book {
-  position: relative;
-  display: flex;
-  height: 80vh;                 /* 🔹 Chiều cao cố định tối đa */
-  width: 80vh;                  /* Tự tính theo tỷ lệ trang */
-  max-height: 70vh;
-  pointer-events: none;
-  transform-style: preserve-3d;
-  transition: translate 1s;
-  translate: calc(min(var(--c), 1) * 50%) 0%;
-  rotate: 1 0 0 30deg;
+    position: relative;
+    display: flex;
+    height: 80vh; /* 🔹 Chiều cao cố định tối đa */
+    width: 80vh; /* Tự tính theo tỷ lệ trang */
+    max-height: 70vh;
+    pointer-events: none;
+    transform-style: preserve-3d;
+    transition: translate 1s;
+    translate: calc(min(var(--c), 1) * 50%) 0%;
+    rotate: 1 0 0 30deg;
 }
 
-
 .page {
-  /* PS: Don't go below thickness 0.5 or the pages might transpare */
-  --thickness: 4;
-  flex: none;
-  display: flex;
-  width: 100%;
-  height:100%; 
-  font-size: 2cqmin;
-  /*1* allow pointer events on pages */
-  pointer-events: all;
-  user-select: none;
-  transform-style: preserve-3d;
-  transform-origin: left center;
-  transition:
-    transform 1s,
-    rotate 1s ease-in calc((min(var(--i), var(--c)) - max(var(--i), var(--c))) * 50ms);
-  translate: calc(var(--i) * -100%) 0px 0px;
-  transform: translateZ( calc((var(--c) - var(--i) - 0.5) * calc(var(--thickness) * .23cqmin)));
-  rotate: 0 1 0 calc(clamp(0, var(--c) - var(--i), 1) * -180deg);
+    /* PS: Don't go below thickness 0.5 or the pages might transpare */
+    --thickness: 4;
+    flex: none;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    font-size: 2cqmin;
+    /*1* allow pointer events on pages */
+    pointer-events: all;
+    user-select: none;
+    transform-style: preserve-3d;
+    transform-origin: left center;
+    transition: transform 1s,
+        rotate 1s ease-in
+            calc((min(var(--i), var(--c)) - max(var(--i), var(--c))) * 50ms);
+    translate: calc(var(--i) * -100%) 0px 0px;
+    transform: translateZ(
+        calc((var(--c) - var(--i) - 0.5) * calc(var(--thickness) * 0.23cqmin))
+    );
+    rotate: 0 1 0 calc(clamp(0, var(--c) - var(--i), 1) * -180deg);
 }
 
 .front,
 .back {
-  position: relative;
-  flex: none;
-  width: 100%;
-  height:100%;
-  backface-visibility: hidden;
-  overflow: hidden;
-  background-color: transparent;
-  /* Fix backface visibility Firefox: */
-  translate: 0px;
+    position: relative;
+    flex: none;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    overflow: hidden;
+    background-color: transparent;
+    /* Fix backface visibility Firefox: */
+    translate: 0px;
 }
 
 .back {
-  translate: -100% 0;
-  rotate: 0 1 0 180deg;
+    translate: -100% 0;
+    rotate: 0 1 0 180deg;
 }
-
 
 /* That's it. Your FlipBook customization styles: */
 
 .book {
-  counter-reset: page -1;
-  & a {
-    color: inherit;
-  }
+    counter-reset: page -1;
+    & a {
+        color: inherit;
+    }
 }
 
 .page {
-  box-shadow: 0em .5em 1em -.2em #00000020;
+    box-shadow: 0em 0.5em 1em -0.2em #00000020;
 }
 
 .front,
 .back {
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: space-between;
-  padding: 2em;
-  border: 1px solid #0002;
-  
-  &:has(img) {
-    padding: 0;
-  }
-  
-  & img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  &::after {
-    position: absolute;
-    bottom: 1em;
-    counter-increment: page;
-    content: counter(page) ".";
-    font-size: 0.8em;
-  }
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-between;
+    padding: 2em;
+    border: 1px solid #0002;
+
+    &:has(img) {
+        padding: 0;
+    }
+
+    & img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    &::after {
+        position: absolute;
+        bottom: 1em;
+        counter-increment: page;
+        content: counter(page) ".";
+        font-size: 0.8em;
+    }
 }
 .cover {
-  &::after {
-    content: "";
-  }
+    &::after {
+        content: "";
+    }
 }
 .front {
-  &::after {
-    right: 1em;
-  }
-  background: linear-gradient(to left, #f7f7f7 80%, #eee 100%);
-  border-radius: .1em .5em .5em .1em;
+    &::after {
+        right: 1em;
+    }
+    background: linear-gradient(to left, #f7f7f7 80%, #eee 100%);
+    border-radius: 0.1em 0.5em 0.5em 0.1em;
 }
 .back {
-  &::after {
-    left: 1em;
-  }
-  background-image: linear-gradient(to right, #f7f7f7 80%, #eee 100%);
-  border-radius: .5em .1em .1em .5em;
+    &::after {
+        left: 1em;
+    }
+    background-image: linear-gradient(to right, #f7f7f7 80%, #eee 100%);
+    border-radius: 0.5em 0.1em 0.1em 0.5em;
 }
 
 .cover {
-  background: radial-gradient(circle farthest-corner at 80% 20%, hsl(150 80% 20% / .3) 0%, hsl(170 60% 10% / .1) 100%),
-    hsl(231, 32%, 29%) url("https://picsum.photos/id/984/800/900") 50% / cover;
-  color: hsl(200 30% 98%);
+    background: radial-gradient(
+            circle farthest-corner at 80% 20%,
+            hsl(150 80% 20% / 0.3) 0%,
+            hsl(170 60% 10% / 0.1) 100%
+        ),
+        hsl(231, 32%, 29%) url("https://picsum.photos/id/984/800/900") 50% /
+            cover;
+    color: hsl(200 30% 98%);
 }
 
 .front.cover {
-  background: none !important;
-  background-image: none !important;
-  padding: 0;
+    background: none !important;
+    background-image: none !important;
+    padding: 0;
 }
 
 .front.cover img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 #nextButton {
-  opacity: 0;                  /* ban đầu ẩn */
-  pointer-events: none;        /* không click khi ẩn */
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  background-color: #ff69b4;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
-  z-index: 30;
-  transition: opacity 1s ease; /* hiệu ứng mờ dần */
+    opacity: 0; /* ban đầu ẩn */
+    pointer-events: none; /* không click khi ẩn */
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #ff69b4;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
+    z-index: 30;
+    transition: opacity 1s ease; /* hiệu ứng mờ dần */
 }
 
 #nextButton.visible {
-  opacity: 1;             /* hiện rõ */
-  pointer-events: auto;   /* cho click */
+    opacity: 1; /* hiện rõ */
+    pointer-events: auto; /* cho click */
 }
 
 #nextButton:hover {
-  transform: scale(1.05);
+    transform: scale(1.05);
 }
 
 /* Giao diện 3 full màn, căn giữa nếu cần */
 #thirdContent {
-  position: fixed;
-  inset: 0;
-  display: flex;              /* bạn có thể đổi sang block nếu muốn */
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  z-index: 20;
+    position: fixed;
+    inset: 0;
+    display: flex; /* bạn có thể đổi sang block nếu muốn */
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    z-index: 20;
 }
 
 /* Lớp mưa chữ */
-.content-rain{
-  position:absolute; inset:0;
-  pointer-events:none;
-  overflow: visible;                     /* cho phép tràn cả trái/phải & dưới */
-  z-index:25;
+.content-rain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: visible; /* cho phép tràn cả trái/phải & dưới */
+    z-index: 25;
 }
 
 .rain-item {
-  position: absolute;
-  top: -10vh;
-  left: 0;
-  transform: translateX(-50%);
-  font-family: 'Segoe UI', system-ui, Arial, sans-serif;
-  font-weight: 700;
-  font-size: clamp(16px, 2.2vw, 28px);
-  color: #fff;
-  text-shadow: 0 2px 6px rgba(0,0,0,.45);
-  opacity: 0.95;
-  animation: drop var(--dur, 3s) linear forwards;
-  pointer-events: none;
-  color: #ff66b2;
+    position: absolute;
+    top: -10vh;
+    left: 0;
+    transform: translateX(-50%);
+    font-family: "Segoe UI", system-ui, Arial, sans-serif;
+    font-weight: 700;
+    font-size: clamp(16px, 2.2vw, 28px);
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+    opacity: 0.95;
+    animation: drop var(--dur, 3s) linear forwards;
+    pointer-events: none;
+    color: #ff66b2;
 }
 
 .rain-item .label,
 .rain-item .ghost {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
 }
 
 .rain-item .label {
-  font-family: 'Great Vibes', cursive;
-  color: #ff66b2;
-  font-weight: bold;
-  opacity: var(--itemAlpha, 1);
-  text-shadow:
-    0 0 4px   rgba(255,102,178,0.9),
-    0 0 8px   rgba(255,102,178,0.7),
-    0 0 16px  rgba(255,102,178,0.5),
-    0 0 32px  rgba(255,102,178,0.3),
-    0 0 48px  rgba(255,102,178,0.15);
+    font-family: "Great Vibes", cursive;
+    color: #ff66b2;
+    font-weight: bold;
+    opacity: var(--itemAlpha, 1);
+    text-shadow: 0 0 4px rgba(255, 102, 178, 0.9),
+        0 0 8px rgba(255, 102, 178, 0.7), 0 0 16px rgba(255, 102, 178, 0.5),
+        0 0 32px rgba(255, 102, 178, 0.3), 0 0 48px rgba(255, 102, 178, 0.15);
 }
-
 
 /* Các bóng (ghost) không viền sáng, chỉ hồng mờ */
 .rain-item .ghost {
-  font-family: 'Great Vibes', cursive;
-  font-size: 2.2rem;
-  color: #ff66b2;
-  opacity: var(--alpha, 0.5);
-  text-shadow: none;
+    font-family: "Great Vibes", cursive;
+    font-size: 2.2rem;
+    color: #ff66b2;
+    opacity: var(--alpha, 0.5);
+    text-shadow: none;
 }
 
 .rain-item .ghost {
-  -webkit-text-stroke: 0 transparent;
-  text-shadow: none;
-  opacity: var(--alpha, .3);
+    -webkit-text-stroke: 0 transparent;
+    text-shadow: none;
+    opacity: var(--alpha, 0.3);
 }
 
 /* Rơi tới vị trí do JS đặt trong --endY (40–100vh) */
 @keyframes drop {
-  0%   { transform: translate(-50%, -40vh); opacity: 0; }
-  8%   { opacity: 1; }
-  100% { transform: translate(-50%, var(--endY, 110vh)); opacity: 1; }
+    0% {
+        transform: translate(-50%, -40vh);
+        opacity: 0;
+    }
+    8% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, var(--endY, 110vh));
+        opacity: 1;
+    }
 }
 
-
 /* Toàn màn cho container mưa ảnh */
-#thirdContent { overflow: visible; }     /* cho phép tràn dưới */
+#thirdContent {
+    overflow: visible;
+} /* cho phép tràn dưới */
 /* Container mưa media (ảnh + video) */
-.media-rain{
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: visible;         /* tràn trái/phải & dưới */
-  z-index: 26;               /* trên mưa chữ một lớp */
+.media-rain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: visible; /* tràn trái/phải & dưới */
+    z-index: 26; /* trên mưa chữ một lớp */
 }
 
 /* Item chung */
-.rain-media{
-  position: absolute;
-  top: -10vh;
-  left: 0;
-  transform: translateX(-50%);
-  animation: drop var(--dur, 3s) linear forwards; /* giữ trạng thái cuối */
-  filter: drop-shadow(0 6px 16px rgba(0,0,0,.45));
-  opacity: .98;
+.rain-media {
+    position: absolute;
+    top: -10vh;
+    left: 0;
+    transform: translateX(-50%);
+    animation: drop var(--dur, 3s) linear forwards; /* giữ trạng thái cuối */
+    filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.45));
+    opacity: 0.98;
 }
 
 /* Ảnh trong media */
-.rain-media img{
-  display: block;
-  width: var(--w, 120px);
-  height: var(--h, 160px);
-  object-fit: cover;
-  border-radius: 10px;
+.rain-media img {
+    display: block;
+    width: var(--w, 120px);
+    height: var(--h, 160px);
+    object-fit: cover;
+    border-radius: 10px;
 }
 
 /* Video trong media */
-.rain-media video{
-  display: block;
-  width: var(--w, 120px);
-  height: var(--h, 160px);
-  object-fit: cover;
-  border-radius: 10px;
+.rain-media video {
+    display: block;
+    width: var(--w, 120px);
+    height: var(--h, 160px);
+    object-fit: cover;
+    border-radius: 10px;
 }
 
 .rain-media > .rain-media,
 .rain-media > span.rain-media {
-  top: 0;                  /* gốc theo top 0, để keyframes điều khiển toàn bộ */
-  left: 0;
-  transform: translateX(-50%);
+    top: 0; /* gốc theo top 0, để keyframes điều khiển toàn bộ */
+    left: 0;
+    transform: translateX(-50%);
 }
 
-.back.video-page > video{
-  position: absolute;
-  inset: 0;                   /* top/right/bottom/left = 0 */
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;          /* phủ đầy khung, cắt phần thừa */
-  max-width: none !important;
-  max-height: none !important;
-  transform: none !important; /* phòng khi bị kế thừa transform ngoài */
-  pointer-events: none;       /* không cản click lật trang */
-}
+.back.video-page > video {
+    position: static !important; /* bỏ absolute/inset cũ */
+    inset: auto !important;
+    transform: none !important;
 
-.back.video-page .video-caption{
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  padding: 8px 12px;
-  font-size: clamp(12px,1.8vw,16px);
-  color: #fff;
-  text-align: center;
-  background: linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,0));
-  pointer-events: none;
-}
-
-/* Trang front hiển thị full, bỏ padding để ảnh tràn khung đẹp */
-.front { padding: 0 !important; overflow: hidden; }
-
-/* Lưới 2 cột cân nhau, cao bằng trang */
-.front .two-col{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  height: 100%;
-}
-
-/* Cột trái chứa 1 ảnh */
-.front .col-left{
-  height: 100%;
-}
-
-/* Cột phải chia 2 hàng bằng nhau */
-.front .col-right{
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 8px;
-  height: 100%;
-}
-
-/* Ảnh fill khung, không méo, cắt phần thừa nếu cần */
-.front .two-col img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  border-radius: 6px;     /* tuỳ thích, bỏ nếu không cần */
-}
-
-/* Responsive (tuỳ chọn): dưới 640px chuyển thành 2 hàng */
-@media (max-width: 640px){
-  .front .two-col{
-    grid-template-columns: 1fr;
-    grid-auto-rows: 1fr;
-  }
-  .front .col-right{
-    grid-template-rows: 1fr 1fr;
-  }
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain !important; /* hiển thị toàn bộ khung hình */
+    display: block;
 }
 
 .back.video-page {
-  display: flex;
-  flex-direction: column; /* Video trên, caption dưới */
-  height: 100%;           /* Bằng chiều cao của book */
+    position: relative;
+    padding: 0 !important;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* OK giữ lại, nhưng video sẽ không vượt */
+    background: #000; /* nền letterbox nếu tỉ lệ khác */
+}
+
+/* Trang front hiển thị full, bỏ padding để ảnh tràn khung đẹp */
+.front {
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+/* Lưới 2 cột cân nhau, cao bằng trang */
+.front .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    height: 100%;
+}
+
+/* Cột trái chứa 1 ảnh */
+.front .col-left {
+    height: 100%;
+    width: 100%;
+}
+.col-left {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* ẩn phần thừa nếu có */
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.col-left img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* vừa khung, không cắt */
+    display: block;
+}
+
+/* Cột phải chia 2 hàng bằng nhau */
+.front .col-right {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 8px;
+    height: 100%;
+}
+
+/* Ảnh fill khung, không méo, cắt phần thừa nếu cần */
+.front .two-col img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 6px; /* tuỳ thích, bỏ nếu không cần */
+}
+
+/* Responsive (tuỳ chọn): dưới 640px chuyển thành 2 hàng */
+@media (max-width: 640px) {
+    .front .two-col {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 1fr;
+    }
+    .front .col-right {
+        grid-template-rows: 1fr 1fr;
+    }
+}
+
+.back.video-page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center; /* canh giữa ngang */
+    align-items: center; /* canh giữa dọc */
+    background-color: black; /* hoặc màu nền bạn muốn */
 }
 
 .back.video-page video {
-  flex: 1;                 /* Chiếm toàn bộ khoảng trống còn lại */
-  max-height: 100%;        /* Không vượt quá chiều cao book */
-  width: 100%;
-  object-fit: cover;       /* Lấp đầy khung, giữ tỉ lệ */
-  display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain; /* đảm bảo không crop */
+    display: block;
 }
 
 .back {
-  position: relative;       /* Làm mốc cho caption */
-  height: 100%;             /* Full chiều cao của book page */
+    position: relative; /* Làm mốc cho caption */
+    height: 100%; /* Full chiều cao của book page */
 }
 
 .back img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;         /* Lấp đầy khung ảnh */
-  display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Lấp đầy khung ảnh */
+    display: block;
 }
 
 .back .video-caption {
-  position: absolute;
-  bottom: 0;                 /* Dính xuống đáy ảnh */
-  left: 0;
-  width: 100%;
-  padding: 8px;
-  background: rgba(0, 0, 0, 0.4); /* Nền mờ để chữ dễ đọc */
-  color: white;
-  font-size: 1rem;
-  text-align: center;
-  box-sizing: border-box;
+    position: absolute;
+    bottom: 0; /* Dính xuống đáy ảnh */
+    left: 0;
+    width: 100%;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.4); /* Nền mờ để chữ dễ đọc */
+    color: white;
+    font-size: 1rem;
+    text-align: center;
+    box-sizing: border-box;
 }
 
 .front img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;         /* Lấp đầy khung, giữ tỉ lệ */
-  display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Lấp đầy khung, giữ tỉ lệ */
+    display: block;
 }
 
 .front .image-caption {
-  position: absolute;
-  bottom: 0;                 /* Dính đáy ảnh */
-  left: 0;
-  width: 100%;
-  padding: 8px;
-  font-size: 1rem;
-  color: white;
-  background: rgba(0,0,0,0.4); /* Nền mờ để chữ nổi bật */
-  text-align: center;
-  box-sizing: border-box;
+    position: absolute;
+    bottom: 0; /* Dính đáy ảnh */
+    left: 0;
+    width: 100%;
+    padding: 8px;
+    font-size: 1rem;
+    color: white;
+    background: rgba(0, 0, 0, 0.4); /* Nền mờ để chữ nổi bật */
+    text-align: center;
+    box-sizing: border-box;
 }
 
 .front.video-page,
 .back.video-page {
-  position: relative;
-  height: 100%; /* Bằng chiều cao của book */
-  overflow: hidden;
+    position: relative;
+    height: 100%; /* Bằng chiều cao của book */
+    overflow: hidden;
 }
 
 .front.video-page .video-caption,
 .back.video-page .video-caption {
-  position: absolute;
-  bottom: 0; /* Dính đáy video */
-  left: 0;
-  width: 100%;
-  padding: 8px 12px;
-  font-size: 1rem;
-  color: white;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.4); /* Nền mờ */
-  box-sizing: border-box;
+    position: absolute;
+    bottom: 0; /* Dính đáy video */
+    left: 0;
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 1rem;
+    color: white;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.4); /* Nền mờ */
+    box-sizing: border-box;
 }
 
 .front.video-page video,
 .back.video-page video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;  /* Lấp đầy khung, giữ tỉ lệ */
-  display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Lấp đầy khung, giữ tỉ lệ */
+    display: block;
 }
 
 .back.four-images {
-  height: 100%;
-}
-
-.back.four-images .grid-4 {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* 2 cột */
-  grid-template-rows: 1fr 1fr;    /* 2 hàng */
-  gap: 0;                         /* Không khoảng cách */
-  height: 100%;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background-color: #000; /* nền đen */
 }
 
 .back.four-images figure {
-  margin: 0;
-  width: 100%;
-  height: 100%;
+    margin: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .back.four-images img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Fill toàn bộ khung, cắt phần thừa */
-  display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Fill toàn bộ khung, cắt phần thừa */
+    display: block;
 }
 
-
 /* Đảm bảo page chiếm đúng khung của book */
-.book { height: 70vh; max-height: 70vh; }
-.page, .front, .back { height: 100%; }
+.book {
+    height: 70vh;
+    max-height: 70vh;
+}
+.page,
+.front,
+.back {
+    height: 100%;
+}
 
 /* 4 video chia đều, không khoảng hở, không vượt khung */
-.front.four-videos { padding: 0 !important; overflow: hidden; }
+.front.four-videos {
+    height: 100%;
+    width: 100%;
+    background-color: #000; /* nền đen nếu muốn */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+}
 
+.back.four-images .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 5px;
+    width: 100%;
+    height: 100%;
+}
 .front.four-videos .grid-4 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);  /* 2 cột bằng nhau */
-  grid-template-rows: repeat(2, 1fr);     /* 2 hàng bằng nhau */
-  gap: 0;
-  width: 100%;
-  height: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 5px;
+    width: 100%;
+    height: 100%;
+}
+
+.front.four-videos .grid-4 figure {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.front.four-videos .grid-4 figure video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* giữ nguyên tỉ lệ, không bị cắt */
+    display: block;
+}
+
+.back.four-images .grid-4 figure {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.back.four-images .grid-4 figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* giữ tỉ lệ, không bị cắt */
+    display: block;
 }
 
 .front.four-videos figure {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;                        /* cắt phần video thừa nếu có */
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* cắt phần video thừa nếu có */
 }
 
 .front.four-videos video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;                       /* fill kín ô, giữ tỉ lệ */
-  display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* fill kín ô, giữ tỉ lệ */
+    display: block;
 }
 
 /* Đảm bảo trang bằng chiều cao book */
-.page, .front, .back { height: 100%; }
-
-/* Lưới 25 ô 5x5, phủ kín khung trang */
-.back.media-25 { padding: 0 !important; overflow: hidden; }
-.back.media-25 .grid-25{
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows:    repeat(5, 1fr);
-  gap: 0;                 /* không khoảng hở; tăng lên 2-4px nếu muốn viền */
-  width: 100%;
-  height: 100%;
+.page,
+.front,
+.back {
+    height: 100%;
 }
 
-.back.media-25 figure{
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;        /* cắt phần thừa để không tràn ô */
+/* Lưới 25 ô 5x5, phủ kín khung trang */
+.back.media-25 {
+    padding: 0 !important;
+    overflow: hidden;
+}
+.back.media-25 .grid-25 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 0; /* không khoảng hở; tăng lên 2-4px nếu muốn viền */
+    width: 100%;
+    height: 100%;
+}
+
+.back.media-25 figure {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* cắt phần thừa để không tràn ô */
 }
 
 .back.media-25 img,
-.back.media-25 video{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;       /* fill kín ô, giữ tỉ lệ */
-  display: block;
+.back.media-25 video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* fill kín ô, giữ tỉ lệ */
+    display: block;
 }
 
 .back.media-25 video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 /* Trang media 25 ô – áp dụng cho cả front/back */
-.front.media-25, .back.media-25 { padding: 0 !important; overflow: hidden; height: 100%; }
-.front.media-25 .grid-25, .back.media-25 .grid-25{
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(5, 1fr);
-  gap: 0;               /* tăng lên 2–4px nếu muốn có rãnh */
-  width: 100%;
-  height: 100%;
+.front.media-25,
+.back.media-25 {
+    padding: 0 !important;
+    overflow: hidden;
+    height: 100%;
 }
-.front.media-25 figure, .back.media-25 figure{
-  margin: 0; width: 100%; height: 100%; overflow: hidden;
+.front.media-25 .grid-25,
+.back.media-25 .grid-25 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 0; /* tăng lên 2–4px nếu muốn có rãnh */
+    width: 100%;
+    height: 100%;
 }
-.front.media-25 img, .back.media-25 img,
-.front.media-25 video, .back.media-25 video{
-  width: 100%; height: 100%; object-fit: cover; display: block;
+.front.media-25 figure,
+.back.media-25 figure {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.front.media-25 img,
+.back.media-25 img,
+.front.media-25 video,
+.back.media-25 video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .grid-25 img,
 .grid-25 video {
-  border-radius: 10px; /* hoặc 50% nếu muốn bo tròn */
-  overflow: hidden;
-  display: block; /* đảm bảo không bị khoảng trắng */
+    border-radius: 10px; /* hoặc 50% nếu muốn bo tròn */
+    overflow: hidden;
+    display: block; /* đảm bảo không bị khoảng trắng */
+}
+
+.meo-bantim {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 120px;
+    height: auto;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* Tim bay theo hướng (tự di chuyển bằng JS, không dùng keyframes cũ) */
+.heart-flight {
+    position: fixed;
+    left: 0;
+    top: 0; /* JS sẽ set toạ độ */
+    transform: translate(-50%, -50%);
+    font-size: 28px; /* JS có thể random */
+    pointer-events: none;
+    z-index: 9999;
+    will-change: transform, opacity;
+}
+
+.front.cover video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Giữ tỷ lệ nhưng lấp đầy khung */
+    display: block;
+}
+
+.back video,
+.front video {
+    max-height: 100%; /* Không vượt quá chiều cao của book */
+    width: auto; /* Giữ tỷ lệ gốc */
+    object-fit: contain; /* Đảm bảo toàn bộ video hiển thị trong khung */
+    display: block;
+    margin: 0 auto; /* Căn giữa ngang */
 }
