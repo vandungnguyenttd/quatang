@@ -1,5 +1,5 @@
 const starField = document.getElementById("star-field");
-const starCount = 500;
+const starCount = 300;
 
 const starTypes = ["", "star-4", "star-5", "star-6"];
 const twinkleClasses = [
@@ -9,6 +9,11 @@ const twinkleClasses = [
     "twinkle4",
     "twinkle5",
 ];
+const CAPTIONS = {
+  thutay: "Chúc mừng năm mới! 🎉\nMột năm mới lại đến, mang theo biết bao hy vọng, ước mơ và những khởi đầu tươi sáng. Mong rằng năm nay sẽ là hành trình đầy niềm vui, sức khỏe dồi dào và thành công rực rỡ cho bạn và những người thân yêu. Hãy để quá khứ khép lại, giữ lại những kỷ niệm đẹp và bài học quý giá, để rồi tự tin bước tiếp với tâm thế tích cực và lạc quan. Chúc bạn luôn mỉm cười trước mọi thử thách, luôn tìm thấy niềm hạnh phúc trong từng khoảnh khắc, và biến mọi ước mơ thành hiện thực. Một năm an khang, thịnh vượng, vạn sự như ý! 🌸🍀", // xuống hàng thêm \n vào giữa
+  // img43: "Bìa sách kỷ niệm",
+};
+let bgAudioEl = null;
 
 for (let i = 0; i < starCount; i++) {
     const star = document.createElement("div");
@@ -223,20 +228,110 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function handleStart() {
-    stopDirectedHearts(); // <- tắt tim bay có hướng
+  // ⛔️ chống double-click
+  if (handleStart._running) return;
+  handleStart._running = true;
 
-    const main = document.getElementById("mainContent");
-    const second = document.getElementById("secondContent");
+  stopDirectedHearts(); // tắt tim bay có hướng
 
-    // Thêm hiệu ứng mờ dần
-    main.classList.add("fade-out");
+  // 🔊 phát nhạc nền (kèm resume AudioContext cho iOS)
+  try {
+    const bgAudioEl = document.getElementById('bgAudio');
+    if (bgAudioEl) {
+      // resume AudioContext nếu có
+      if (window.AudioContext || window.webkitAudioContext) {
+        try {
+          const Ctx = window.AudioContext || window.webkitAudioContext;
+          if (!handleStart._ac) handleStart._ac = new Ctx();
+          if (handleStart._ac.state === 'suspended') {
+            handleStart._ac.resume().catch(()=>{});
+          }
+        } catch {}
+      }
+      bgAudioEl.muted = false;
+      bgAudioEl.currentTime = 0;
+      bgAudioEl.play().catch(err => console.warn('Không phát được audio:', err));
+    }
+  } catch (e) { console.warn(e); }
 
+  const main = document.getElementById("mainContent");
+  const second = document.getElementById("secondContent");
+
+  if (typeof heartIntervalId !== "undefined" && heartIntervalId) {
+    clearInterval(heartIntervalId);
+    heartIntervalId = null;
+  }
+  main.classList.add("fade-out");
+
+  setTimeout(() => {
+    main.style.display = "none";
+    second.style.display = "block";
+    second.classList.add("fade-in");
+
+    // ✅ Sau khi màn 2 đã HIỆN → đảm bảo video1 auto play trên mobile
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const v = document.querySelector('#secondContent video[data-asset="video1"]');
+        if (v) {
+          // gán src nếu chưa
+          if (!v.src) v.src = Assets.url('video1');
+
+          // Đảm bảo đủ điều kiện iOS
+          v.muted = true;                         // property
+          v.setAttribute('muted', '');            // attribute
+          v.playsInline = true;
+          v.setAttribute('playsinline', '');
+          v.setAttribute('webkit-playsinline', '');
+          v.autoplay = true;
+          v.loop = true;
+          v.preload = v.preload || 'metadata';
+
+          // iOS đôi khi cần load() trước
+          try { if (v.readyState === 0) v.load(); } catch {}
+
+          v.play().catch(err => {
+            console.warn('Video autoplay bị chặn, sẽ thử lại khi có tương tác:', err);
+          });
+
+          // Bảo hiểm: lần chạm/kích tiếp theo sẽ play lại nếu bị chặn
+          const retryOnce = () => {
+            v.play().catch(()=>{});
+            document.removeEventListener('touchstart', retryOnce);
+            document.removeEventListener('click', retryOnce);
+          };
+          document.addEventListener('touchstart', retryOnce, { once: true, passive: true });
+          document.addEventListener('click', retryOnce, { once: true });
+        }
+      });
+    });
+
+    // Preload third.js sau 1.2s
     setTimeout(() => {
-        main.style.display = "none";
-        second.style.display = "block";
-        second.classList.add("fade-in");
-    }, 1500); // Phù hợp thời gian animation
+      try {
+        const link = document.createElement("link");
+        link.rel = "modulepreload";
+        link.href = "./third.js";
+        document.head.appendChild(link);
+      } catch (err) {
+        console.warn("Modulepreload third.js failed:", err);
+      }
+    }, 1200);
+
+  }, 1500);
 }
+(function ensureVideoAfterTouch(){
+  const playOnce = () => {
+    const v = document.querySelector('#secondContent video[data-asset="video1"]');
+    if (v) v.play().catch(()=>{});
+    document.removeEventListener('touchstart', playOnce);
+    document.removeEventListener('click', playOnce);
+  };
+  document.addEventListener('touchstart', playOnce, { once:true, passive:true });
+  document.addEventListener('click', playOnce, { once:true });
+})();
+
+// Đưa hàm ra global
+window.handleStart = handleStart;
 
 const flipBook = (elBook) => {
     const pages = elBook.querySelectorAll(".page");
@@ -255,9 +350,11 @@ const flipBook = (elBook) => {
             // Đến trang cuối -> đưa book về giữa + hiện nút Next (fade-in 1s)
             if (curr >= totalPages) {
                 elBook.classList.add("snap-center");
+                elBook.style.translate = "0% 100%"; // ép về phải
                 if (nextButton) nextButton.classList.add("visible");
             } else {
                 elBook.classList.remove("snap-center");
+                elBook.style.removeProperty("translate");
                 if (nextButton) nextButton.classList.remove("visible");
             }
         });
@@ -266,261 +363,90 @@ const flipBook = (elBook) => {
 
 document.querySelectorAll(".book").forEach(flipBook);
 
-function goToThirdContent() {
-    const second = document.getElementById("secondContent");
-    const third = document.getElementById("thirdContent");
-
-    // 🔹 Dừng hiệu ứng trái tim
-    if (heartIntervalId) {
-        clearInterval(heartIntervalId);
-        heartIntervalId = null;
-    }
-
-    second.classList.add("fade-out");
-    setTimeout(() => {
-        second.style.display = "none";
-        third.style.display = "flex"; // hoặc block
-        third.classList.add("fade-in");
-    }, 1500);
+function isPortrait() {
+    return window.innerHeight > window.innerWidth;
 }
 
-// ===== Rain text for 3rd screen =====
-let rainTimer = null;
-let activeBottomCount = 0; // số chữ hiện hành sẽ rơi tới 100%
-const BOTTOM_QUOTA = 10; // tối thiểu phải có 10 chữ rơi tới đáy
-// Quản lý "lớp" (trước/sau) cho mưa chữ
-const MAX_VISIBLE_TEXT_ITEMS = 20; // số lớp ta muốn quản độ mờ
-let textLayers = []; // mảng các phần tử hiện hành (mới nhất đứng trước)
+function checkOrientation() {
+    const warning = document.getElementById("rotate-warning");
+    const cat = document.querySelector(".meo-bantim");
 
-function rebalanceTextLayers() {
-    const minAlpha = 0.5;
-    const maxAlpha = 1.0;
-    const total = textLayers.length;
+    if (isPortrait()) {
+        document.body.classList.add("rotate-lock");
+        if (warning) warning.style.display = "flex";
 
-    textLayers.forEach((el, idx) => {
-        const alpha =
-            maxAlpha - (idx / (total - 1 || 1)) * (maxAlpha - minAlpha);
-        const label = el.querySelector(".label");
-        if (label) {
-            label.style.setProperty("--itemAlpha", alpha.toFixed(3));
-            label.style.opacity = alpha.toFixed(3);
+        // Ẩn gif mèo (phòng CSS bị override) + dừng tim bay
+        if (cat) cat.style.display = "none";
+        if (typeof stopDirectedHearts === "function") stopDirectedHearts();
+    } else {
+        document.body.classList.remove("rotate-lock");
+        if (warning) warning.style.display = "none";
+
+        // Hiện lại gif mèo và bật tim bay khi màn 1 đang hiển thị
+        if (cat) cat.style.display = "";
+        if (
+            typeof isMainVisible === "function" &&
+            typeof startDirectedHearts === "function" &&
+            isMainVisible()
+        ) {
+            startDirectedHearts(500);
         }
-    });
-}
-
-function spawnRainItem(container) {
-    const words = [
-        "Thương em nhiều 💖",
-        "Cô bé đáng yêu",
-        "❤️",
-        "💗",
-        "Cô gái của lòng anh 💕",
-        "Happy Trang Day 🎉",
-    ];
-    const el = document.createElement("span");
-    el.className = "rain-item";
-
-    // Vị trí ngang & thời lượng rơi
-    el.style.left = -5 + Math.random() * 110 + "vw"; // tràn 2 mép
-    el.style.setProperty("--dur", 2.5 + Math.random() * 1.5 + "s");
-
-    // Rơi vượt đáy
-    const endVH = 110 + Math.random() * 30;
-    el.style.setProperty("--endY", endVH + "vh");
-
-    // Chữ chính
-    const word = words[Math.floor(Math.random() * words.length)];
-    const label = document.createElement("span");
-    label.className = "label";
-    label.textContent = word;
-
-    // 🎯 Font-size ngẫu nhiên 1.3rem → 2rem
-    const fontSizeRem = (1.5 + Math.random() * 0.7).toFixed(2) + "rem";
-    label.style.fontSize = fontSizeRem;
-
-    el.appendChild(label);
-
-    el.addEventListener("animationend", () => {
-        const idx = textLayers.indexOf(el);
-        if (idx >= 0) textLayers.splice(idx, 1);
-    });
-
-    container.appendChild(el);
-
-    textLayers.unshift(el);
-    if (textLayers.length > MAX_VISIBLE_TEXT_ITEMS) {
-        textLayers.length = MAX_VISIBLE_TEXT_ITEMS;
     }
-    rebalanceTextLayers();
 }
 
-function startContentRain() {
-    const container = document.querySelector("#thirdContent .content-rain");
-    if (!container) return;
-    stopContentRain(); // tránh tạo trùng
-    activeBottomCount = 0;
-
-    // Khởi động: bơm đủ 10 chữ đầu tiên rơi tới đáy (spacing nhẹ)
-    for (let i = 0; i < BOTTOM_QUOTA; i++) {
-        setTimeout(() => spawnRainItem(container), i * 120);
-    }
-
-    // Sau đó mưa liên tục (≈ 180–280ms/chữ)
-    rainTimer = setInterval(() => {
-        spawnRainItem(container);
-    }, 100 + Math.random() * 100);
-}
-
-function stopContentRain() {
-    if (rainTimer) clearInterval(rainTimer);
-    rainTimer = null;
-}
+window.addEventListener("load", checkOrientation);
+window.addEventListener("resize", checkOrientation);
+window.addEventListener("orientationchange", checkOrientation);
 
 // ===== Update goToThirdContent to stop hearts + start rain =====
+// script.js (module)
+export {}; // (để file là module; hoặc chỉ cần có 'type="module"' trong HTML)
+
 function goToThirdContent() {
     const second = document.getElementById("secondContent");
     const third = document.getElementById("thirdContent");
+    const backBtn = document.getElementById("backButton");
 
-    // Dừng trái tim bay nếu còn
+    // Ẩn nút Back ban đầu
+    if (backBtn) {
+        backBtn.classList.remove("visible");
+        if (backBtnTimer) clearTimeout(backBtnTimer);
+    }
+
+    // Clear hiệu ứng trái tim nếu đang chạy
     if (typeof heartIntervalId !== "undefined" && heartIntervalId) {
         clearInterval(heartIntervalId);
         heartIntervalId = null;
     }
 
+    // Bắt đầu fade-out giao diện 2
+    second.classList.remove("fade-in");
     second.classList.add("fade-out");
-    setTimeout(() => {
+
+    // Chờ 1.5s rồi mới ẩn giao diện 2 và hiện giao diện 3
+    setTimeout(async () => {
         second.style.display = "none";
+
+        // Hiện giao diện 3 với fade-in
         third.style.display = "flex";
+        third.classList.remove("fade-out");
         third.classList.add("fade-in");
 
-        // Bắt đầu mưa chữ
-        startContentRain();
-        startMediaRain();
-    }, 1500);
+        // Nạp code giao diện 3
+        const mod = await import("./third.js");
+        thirdModuleRef = mod;
+        mod.startContentRain();
+        mod.startMediaRain();
+
+        // Hiện nút Back sau 10s
+        if (backBtn) {
+            backBtnTimer = setTimeout(() => {
+                backBtn.classList.add("visible");
+            }, 10000);
+        }
+    }, 1500); // khớp với thời gian fade-out
 }
-
-// ===== Config mưa media (ảnh + video) =====
-const IMAGES_COUNT = 20; // số file img1..imgN
-const IMG_PATH_PREFIX = "./assets/images/img";
-const IMG_PATH_SUFFIX = ".jpg";
-
-const VIDEOS_COUNT = 6; // số file video1..videoN
-const VIDEO_PATH_PREFIX = "./assets/video/video";
-const VIDEO_PATH_SUFFIX = ".mp4";
-
-// tỉ lệ xuất hiện video so với ảnh (0..1): 0.3 = 30% video, 70% ảnh
-const VIDEO_PROBABILITY = 0.35;
-
-const IMAGE_LIST = Array.from(
-    { length: IMAGES_COUNT },
-    (_, i) => `${IMG_PATH_PREFIX}${i + 1}${IMG_PATH_SUFFIX}`
-);
-const VIDEO_LIST = Array.from(
-    { length: VIDEOS_COUNT },
-    (_, i) => `${VIDEO_PATH_PREFIX}${i + 1}${VIDEO_PATH_SUFFIX}`
-);
-
-function pickMedia() {
-    const isVideo = Math.random() < VIDEO_PROBABILITY && VIDEO_LIST.length > 0;
-    if (isVideo) {
-        return {
-            type: "video",
-            src: VIDEO_LIST[Math.floor(Math.random() * VIDEO_LIST.length)],
-        };
-    }
-    return {
-        type: "img",
-        src: IMAGE_LIST[Math.floor(Math.random() * IMAGE_LIST.length)],
-    };
-}
-
-// ===== Rain media unified =====
-let mediaRainTimer = null;
-const MEDIA_MAX_NODES = 300; // giới hạn DOM tổng
-const MEDIA_SPAWN_INTERVAL_MIN = 180; // ms
-const MEDIA_SPAWN_INTERVAL_MAX = 320; // ms
-
-function spawnRainMedia(container) {
-    if (container.childElementCount > MEDIA_MAX_NODES) {
-        container.firstElementChild?.remove(); // xóa item cũ nhất để tránh phình DOM
-    }
-
-    const wrap = document.createElement("span");
-    wrap.className = "rain-media";
-
-    // chọn ảnh hoặc video
-    const media = pickMedia();
-    let node;
-    if (media.type === "video") {
-        node = document.createElement("video");
-        node.src = media.src;
-        node.autoplay = true;
-        node.muted = true; // cần muted để autoplay
-        node.loop = true;
-        node.playsInline = true; // iOS
-        node.preload = "none"; // giảm tải
-        node.controls = false;
-    } else {
-        node = document.createElement("img");
-        node.src = media.src;
-        node.alt = "rain-media";
-        node.decoding = "async";
-        node.loading = "lazy";
-    }
-    wrap.appendChild(node);
-
-    // Kích thước ngẫu nhiên — giữ tỷ lệ “card dọc”
-    const w = 100 + Math.floor(Math.random() * 61); // 100..160 px
-    const h = Math.floor(w * (1.35 + Math.random() * 0.15)); // ~1.35–1.5
-    wrap.style.setProperty("--w", w + "px");
-    wrap.style.setProperty("--h", h + "px");
-
-    // Vị trí ngang: cho phép tràn 2 mép
-    wrap.style.left = -5 + Math.random() * 110 + "vw";
-
-    // Thời lượng rơi
-    wrap.style.setProperty("--dur", 2.2 + Math.random() * 2.0 + "s");
-
-    // Rơi vượt đáy 110–140vh
-    const endVH = 110 + Math.random() * 30;
-    wrap.style.setProperty("--endY", endVH + "vh");
-
-    // Khi kết thúc animation: không remove để media “đậu” ở đáy
-    wrap.addEventListener("animationend", () => {
-        // Tối ưu: nếu rơi quá sâu, pause video để giảm CPU
-        if (media.type === "video" && endVH > 125) node.pause();
-    });
-
-    container.appendChild(wrap);
-}
-
-function startMediaRain() {
-    const container = document.querySelector("#thirdContent .media-rain");
-    if (!container) return;
-    stopMediaRain();
-
-    // bơm một ít item ban đầu
-    for (let i = 0; i < 12; i++) {
-        setTimeout(() => spawnRainMedia(container), i * 90);
-    }
-
-    // vòng lặp sinh liên tục với nhịp ngẫu nhiên
-    const tick = () => {
-        spawnRainMedia(container);
-        const next =
-            MEDIA_SPAWN_INTERVAL_MIN +
-            Math.random() *
-                (MEDIA_SPAWN_INTERVAL_MAX - MEDIA_SPAWN_INTERVAL_MIN);
-        mediaRainTimer = setTimeout(tick, next);
-    };
-    tick();
-}
-function stopMediaRain() {
-    if (mediaRainTimer) {
-        clearTimeout(mediaRainTimer);
-        mediaRainTimer = null;
-    }
-}
+window.goToThirdContent = goToThirdContent;
 
 // ===== Tim bay có hướng (chỉ cho giao diện 1) =====
 let heartTimer = null;
@@ -542,16 +468,6 @@ function elementsReady() {
     const rc = cat.getBoundingClientRect();
     const rb = btn.getBoundingClientRect();
     return rc.width > 0 && rc.height > 0 && rb.width > 0 && rb.height > 0;
-}
-
-// Đợi tới khi đo được layout (tối đa 3s), rồi gọi cb() NGAY
-function whenReadyToFire(cb, maxWait = 3000) {
-    const t0 = performance.now();
-    (function loop() {
-        if (elementsReady()) return cb();
-        if (performance.now() - t0 > maxWait) return cb(); // fallback: bắn dù sao
-        requestAnimationFrame(loop);
-    })();
 }
 
 function startDirectedHearts(intervalMs = 500) {
@@ -582,42 +498,70 @@ function stopDirectedHearts() {
 
 // Bảo vệ trong chính hàm spawn (nếu timer chưa kịp tắt)
 function spawnDirectedHeart() {
-    if (!directedHeartsEnabled || !isMainVisible()) return; // ⛔️ không phải màn 1 thì thoát
+    if (!directedHeartsEnabled || !isMainVisible()) return;
 
     const cat = document.querySelector(".meo-bantim");
     const btn = document.querySelector(".start-button");
     if (!cat || !btn) return;
 
+    // 1) Tọa độ start (s) và end (e)
     const rCat = cat.getBoundingClientRect();
     const rBtn = btn.getBoundingClientRect();
-    const sx = rCat.left + rCat.width / 2 + 25; // lệch phải 3px
-    const sy = rCat.top + rCat.height / 2 + 10; // lệch xuống 10px
+    const sx = rCat.left + rCat.width / 2 + 25;
+    const sy = rCat.top + rCat.height / 2 + 10;
     const ex = rBtn.left + rBtn.width / 2 - 60;
     const ey = rBtn.top + rBtn.height / 2;
 
+    // 2) Control point (c) đặt ở giữa, nhích về phía end và "nâng" lên trên
+    const dx = ex - sx,
+        dy = ey - sy;
+    const dist = Math.hypot(dx, dy) || 1;
+    const mx = sx + dx * 0.5,
+        my = sy + dy * 0.5; // trung điểm
+    const CURVE_TOWARD = 0.15; // kéo CP về phía đích
+    const LIFT = Math.min(180, Math.max(70, dist * 0.28)); // độ nâng vòng cung (px)
+    const cx = mx + dx * CURVE_TOWARD;
+    const cy = my - LIFT; // 🔺 nâng lên trên (y giảm)
+
+    // 3) Tạo node trái tim, hiển thị ngay tại điểm bắt đầu
     const heart = document.createElement("div");
     heart.className = "heart-flight";
     heart.textContent = "❤️";
-    heart.style.fontSize = `${28 * (1.1 + Math.random() * 0.6)}px`;
+    heart.style.fontSize = `${28 * (1.05 + Math.random() * 0.6)}px`;
+    heart.style.transform = `translate(${sx}px, ${sy}px) translate(-50%,-50%) scale(0.9)`;
+    heart.style.opacity = "1";
     document.body.appendChild(heart);
 
-    const dur = 1200 + Math.random() * 500;
+    // 4) Bezier bậc 2 + easing
+    const quad = (t, p0, p1, p2) =>
+        (1 - t) * (1 - t) * p0 + 2 * (1 - t) * t * p1 + t * t * p2;
+    const easeInOutQuad = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
+
+    // Thời lượng theo quãng đường (mượt, tự nhiên)
+    const pxPerSec = 1000; // tốc độ “ảo”
+    const dur = Math.max(800, Math.min(1700, (dist / pxPerSec) * 1000));
     const t0 = performance.now();
 
     function step(now) {
         if (!directedHeartsEnabled || !isMainVisible()) {
             heart.remove();
             return;
-        } // ⛔️ sang màn khác thì hủy ngay
+        }
+
         let t = (now - t0) / dur;
         if (t > 1) t = 1;
-        const x = sx + (ex - sx) * t;
-        const y = sy + (ey - sy) * t;
-        const s = 0.9 + t * 0.2;
+
+        const te = easeInOutQuad(t);
+        const x = quad(te, sx, cx, ex);
+        const y = quad(te, sy, cy, ey);
+
+        const s = 0.9 + te * 0.22;
         heart.style.transform = `translate(${x}px, ${y}px) translate(-50%,-50%) scale(${s})`;
-        heart.style.opacity = String(1 - t * 0.15);
-        if (t < 1) requestAnimationFrame(step);
-        else
+        heart.style.opacity = String(1 - te * 0.18);
+
+        if (t < 1) {
+            requestAnimationFrame(step);
+        } else {
             heart.animate(
                 [
                     { transform: heart.style.transform, opacity: 0.85 },
@@ -628,19 +572,417 @@ function spawnDirectedHeart() {
                 ],
                 { duration: 220, easing: "ease-out" }
             ).onfinish = () => heart.remove();
+        }
     }
     requestAnimationFrame(step);
 }
 
-window.addEventListener("load", () => {
-    // Bắn ngay lập tức 2 tim đầu
-    spawnDirectedHeart();
-    setTimeout(spawnDirectedHeart, 150);
+// Hạ ưu tiên mặc định cho media màn 2 (sẽ nâng lại cho trang đang xem)
+function setDefaultBookMediaPriority() {
+    document.querySelectorAll("#secondContent img").forEach((img) => {
+        img.loading = "lazy";
+        img.decoding = "async";
+        img.setAttribute("fetchpriority", "low");
+    });
+document.querySelectorAll('#secondContent video').forEach(v => {
+  if (v.dataset.asset === 'video1') {
+    v.preload = 'metadata'; // hoặc 'auto'
+  } else {
+    if (!v.preload) v.preload = 'none';
+  }
+});
+}
+document.addEventListener("DOMContentLoaded", setDefaultBookMediaPriority);
 
-    // Sau đó tiếp tục bắn 2 tim/lượt mỗi 500ms
-    heartTimer = setInterval(() => {
-        spawnDirectedHeart();
-        setTimeout(spawnDirectedHeart, 150);
-    }, 500);
+// --- START - Vùng nhấp xem ảnh --- */
+import { Assets } from "./assets.js";
+
+/**
+ * Dùng rectPct: [left%, top%, width%, height%]
+ * -> mọi giá trị là SỐ phần trăm (0..100), không kèm dấu %
+ */
+const HOTSPOTS = [
+    {
+        pageSelector: '.back:has([data-asset="book1"])',
+        items: [
+            { rectPct: [15, 11, 20, 24], asset: "img37" },
+            { rectPct: [39, 11, 20, 24], asset: "img17" },
+            { rectPct: [63, 11, 20, 24], asset: "img14" },
+            { rectPct: [87, 11, 20, 24], asset: "img26" },
+
+            { rectPct: [4,  38, 20, 24], asset: "img4" },
+            { rectPct: [28, 38, 20, 24], asset: "img20" },
+            { rectPct: [52, 38, 20, 24], asset: "img41" },
+            { rectPct: [76, 38, 20, 24], asset: "img36" },
+
+            { rectPct: [15, 65, 20, 24], asset: "img30" },
+            { rectPct: [39, 65, 20, 24], asset: "img16" },
+            { rectPct: [63, 65, 20, 24], asset: "img13" },
+            { rectPct: [87, 65, 20, 24], asset: "img32" },
+        ],
+    },
+    {
+        pageSelector: '.front:has([data-asset="book2"])',
+        items: [
+            { rectPct: [9,  25, 28, 23], asset: "img56" },
+            { rectPct: [15, 50, 23, 37], asset: "img54" },
+            { rectPct: [39, 43, 22, 38], asset: "img55" },
+            { rectPct: [63, 22, 22, 37], asset: "img37" },
+            { rectPct: [64, 61, 29, 22], asset: "img41" },
+        ],
+    },
+    {
+        pageSelector: '.back:has([data-asset="book3"])',
+        items: [
+            { rectPct: [10, 12, 17, 23], asset: "img64" },
+            { rectPct: [31, 12, 17, 23], asset: "img62" },
+            { rectPct: [52, 12, 17, 23], asset: "img59" },
+            { rectPct: [73, 12, 17, 23], asset: "img58" },
+
+            { rectPct: [10, 38, 17, 23], asset: "img48" },
+            { rectPct: [52, 38, 17, 23], asset: "img53" },
+            { rectPct: [73, 38, 17, 23], asset: "img49" },
+
+            { rectPct: [10, 65, 17, 23], asset: "img44" },
+            { rectPct: [31, 65, 17, 23], asset: "img29" },
+            { rectPct: [52, 65, 17, 23], asset: "img13" },
+            { rectPct: [73, 65, 17, 23], asset: "img11" },
+        ],
+    },
+    {
+        pageSelector: '.front:has([data-asset="book4"])',
+        items: [
+            { rectPct: [65,  9, 28, 23], asset: "img20" },
+            { rectPct: [67, 38, 28, 23], asset: "img12" },
+            { rectPct: [69, 68, 28, 23], asset: "img26" },
+        ],
+    },
+    {
+        pageSelector: '.back:has([data-asset="book5"])',
+        items: [
+            { rectPct: [16, 13, 10, 13], asset: "img72" },
+            { rectPct: [27, 9, 12, 17], asset: "img73" },
+            { rectPct: [40, 15, 9, 12], asset: "img71" },
+            { rectPct: [53, 15, 11, 11], asset: "img56" },
+            { rectPct: [64, 9, 10, 20], asset: "img70" },
+            { rectPct: [74, 10, 9, 13], asset: "img69" },
+            { rectPct: [11, 26, 13, 8], asset: "img67" },
+            { rectPct: [25, 26, 12, 8], asset: "img60" },
+            { rectPct: [37, 26, 13, 12], asset: "img68" },
+            { rectPct: [51, 26, 13, 12], asset: "img65" },
+            { rectPct: [74, 23, 14, 7], asset: "img55" },
+            { rectPct: [10, 34, 16, 14], asset: "img37" },
+            { rectPct: [26, 34, 11, 14], asset: "img36" },
+            { rectPct: [64, 29, 17, 14], asset: "img57" },
+            { rectPct: [80, 29, 10, 14], asset: "img47" },
+            { rectPct: [13, 48, 7, 10], asset: "img29" },
+            { rectPct: [20, 48, 17, 18], asset: "img9" },
+            { rectPct: [64, 42, 16, 13], asset: "img62" },
+            { rectPct: [80, 42, 8, 13], asset: "img16" },
+            { rectPct: [28, 65, 8, 7], asset: "img17" },
+            { rectPct: [37, 62, 17, 12], asset: "img21" },
+            { rectPct: [54, 62, 10, 12], asset: "img18" },
+            { rectPct: [64, 55, 10, 12], asset: "img25" },
+            { rectPct: [73, 55, 10, 9], asset: "img14" },
+            { rectPct: [40, 75, 10, 10], asset: "img45" },
+            { rectPct: [50, 75, 10, 10], asset: "img58" },
+            { rectPct: [45, 85, 10, 8], asset: "img44" },
+        ],
+    },
+    {
+        pageSelector: '.front:has([data-asset="book6"])',
+        items: [
+            { rectPct: [10, 10, 28, 33], asset: "img41" },
+            { rectPct: [60, 10, 33, 40], asset: "img70" },
+            { rectPct: [37, 30, 23, 36], asset: "img56" },
+            { rectPct: [10, 48, 28, 36], asset: "img40" },
+            { rectPct: [57, 50, 33, 36], asset: "img48" },
+        ],
+    },
+    {
+        pageSelector: '.back:has([data-asset="book7"])',
+        items: [
+            { rectPct: [15, 19, 22, 37], asset: "img39" },
+            { rectPct: [64, 19, 15, 32], asset: "img18" },
+            { rectPct: [38, 28, 25, 44], asset: "img21" },
+            { rectPct: [64, 55, 28, 25], asset: "img46" },
+        ],
+    },
+    {
+        pageSelector: '.front:has([data-asset="book8"])',
+        items: [
+            { rectPct: [5, 36, 27, 37], asset: "img12" },
+            { rectPct: [38, 45, 24, 30], asset: "img19" },
+            { rectPct: [67, 40, 27, 30], asset: "img6" },
+        ],
+    },
+    {
+        pageSelector: '.back:has([data-asset="book9"])',
+        items: [
+            { rectPct: [18, 24, 19, 30], asset: "img8" },
+            { rectPct: [38, 18, 24, 16], asset: "img26" },
+            { rectPct: [63, 22, 19, 19], asset: "img59" },
+            { rectPct: [18, 55, 19, 22], asset: "img2" },
+            { rectPct: [38, 35, 24, 36], asset: "img6" },
+            { rectPct: [63, 40, 19, 22], asset: "img10" },
+        ],
+    },
+    {
+        pageSelector: '.front:has([data-asset="book10"])',
+        items: [
+            { rectPct: [29, 14, 33, 27], asset: "img67" },
+            { rectPct: [38, 43, 25, 38], asset: "img19" },
+        ],
+    },
+    {
+        pageSelector: '.back:has([data-asset="book11"])',
+        items: [{ rectPct: [50, 50, 30, 25], asset: "thutay" }],
+    },
+    {
+        pageSelector: '.back:has([data-asset="book12"])',
+        items: [
+            { rectPct: [20, 25, 25, 30], asset: "img74" },
+            { rectPct: [25, 60, 27, 30], asset: "img75" },
+            { rectPct: [45, 40, 20, 20], asset: "img76" },
+            { rectPct: [63,  0, 25, 40], asset: "img77" },
+            { rectPct: [65, 40, 25, 38], asset: "img78" },
+            { rectPct: [50, 78, 40, 38], asset: "img79" },
+        ],
+        
+    },
+]; /*[ left  , top   , width  , height ] */
+
+/* Lightbox (giữ nguyên nếu bạn đã có) */
+function openLightbox(assetName, opts = {}) {
+  const box = document.getElementById('asset-lightbox');
+  if (!box) return;
+  const img = box.querySelector('img');
+  const cap = document.getElementById('asset-caption');
+  const closeBtn = box.querySelector('.close');
+
+  // reset
+  box.classList.remove('closing');
+  img.classList.remove('show', 'rounded');
+  cap?.classList.remove('on-rounded');
+
+  // gán src/alt
+  img.src = Assets.url(assetName);
+  img.alt = assetName;
+
+  // caption + typewriter (giữ \n)
+  if (cap) {
+    const text = (typeof CAPTIONS !== 'undefined' && CAPTIONS[assetName]) ? CAPTIONS[assetName] : "";
+    cap.classList.toggle('has-text', !!text);
+    if (text) {
+      typeCaption(cap, text, 22);    // bạn đã có hàm typeCaption(...)
+    } else {
+      stopTypeCaption?.();
+      cap.innerHTML = "";
+    }
+  }
+
+  // bo góc nếu yêu cầu
+  if (opts.rounded) {
+    img.classList.add('rounded');
+    cap?.classList.add('on-rounded');
+  }
+
+  // mở overlay
+  box.classList.add('open');
+
+  // 🛡️ miễn nhiễm click/keyup “lọt” vào overlay trong 300ms
+  box.dataset.justOpened = '1';
+  setTimeout(() => { delete box.dataset.justOpened; }, 300);
+
+  // đưa focus về nút close (tránh phím Space kích hoạt lại button hotspot)
+  closeBtn?.focus({ preventScroll: true });
+
+  // bật fade-in ở frame kế tiếp
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      img.classList.add('show');
+    });
+  });
+}
+
+function closeLightbox(){
+  const box = document.getElementById('asset-lightbox');
+  if (!box) return;
+  const img = box.querySelector('img');
+  const cap = document.getElementById('asset-caption');
+
+  img.classList.remove('show');
+
+  const done = () => {
+    box.classList.remove('open');
+    img.src = '';
+    img.classList.remove('rounded');       // <-- dọn class
+    cap?.classList.remove('on-rounded');   // <-- dọn class
+    img.removeEventListener('transitionend', done);
+  };
+
+  const t = setTimeout(done, 350);
+  img.addEventListener('transitionend', () => { clearTimeout(t); done(); }, { once:true });
+}
+  
+let _lbIgnoreUntil = 0;
+
+function wireLightbox() {
+  const box = document.getElementById('asset-lightbox');
+  if (!box || box.dataset.wired) return;
+  box.dataset.wired = '1';
+
+  // chặn đóng khi bấm vào nội dung bên trong (img/figure/caption)
+  const fig = box.querySelector('.lightbox-figure') || box;
+  fig.addEventListener('click', (e) => e.stopPropagation(), { capture: true });
+
+  // chỉ đóng khi bấm nền tối hoặc nút close
+  box.addEventListener('click', (e) => {
+    // miễn nhiễm click ngay sau khi mở
+    if (Date.now() < _lbIgnoreUntil) return;
+
+    if (e.target === box || e.target.closest('.close')) {
+      closeLightbox();
+    }
+  }, { passive: true });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  }, { passive: true });
+}
+
+
+function setupHotspotsPercent() {
+    wireLightbox();
+
+    HOTSPOTS.forEach((cfg) => {
+        const page = document.querySelector(cfg.pageSelector);
+        if (!page) return;
+
+        if (getComputedStyle(page).position === "static") {
+            page.style.position = "relative";
+        }
+
+        // Tránh tạo trùng
+        if (page.dataset.hotspotsReady === "1") return;
+
+        // Tạo hàng loạt bằng DocumentFragment (nhanh hơn)
+        const frag = document.createDocumentFragment();
+
+        cfg.items.forEach(({ rectPct, asset }) => {
+            const [l, t, w, h] = rectPct;
+            const spot = document.createElement("button");
+            spot.type = "button";
+            spot.className = "hotspot";
+            spot.style.left = `${l}%`;
+            spot.style.top = `${t}%`;
+            spot.style.width = `${w}%`;
+            spot.style.height = `${h}%`;
+            spot.dataset.asset = asset; // dùng cho delegation
+            spot.setAttribute("aria-label", `Xem ${asset}`);
+            frag.appendChild(spot);
+        });
+
+        page.appendChild(frag);
+        page.dataset.hotspotsReady = "1";
+
+        // ✅ Event delegation: chỉ 1 listener cho cả trang
+page.addEventListener('pointerup', (e) => {
+  const btn = e.target.closest('.hotspot');
+  if (!btn || !page.contains(btn)) return;
+  e.preventDefault();      // chặn click “ảo” sau touchend
+  e.stopPropagation();
+  openLightbox(btn.dataset.asset, { rounded: true });
+}, { passive: false });
+    });
+}
+
+window.addEventListener("load", setupHotspotsPercent);
+// --- END - Vùng nhấp xem ảnh --- */
+
+// --- START - Nút BACK --- */
+let backBtnTimer = null;
+let thirdModuleRef = null; // lưu module third.js để dừng hiệu ứng khi back
+
+function backToSecondContent() {
+    const second = document.getElementById("secondContent");
+    const third = document.getElementById("thirdContent");
+    const backBtn = document.getElementById("backButton");
+
+    // clear & ẩn nút Back
+    if (backBtnTimer) {
+        clearTimeout(backBtnTimer);
+        backBtnTimer = null;
+    }
+    if (backBtn) {
+        backBtn.classList.remove("visible");
+    }
+
+    // dừng hiệu ứng mưa nếu có
+    try {
+        if (thirdModuleRef) {
+            thirdModuleRef.stopContentRain?.();
+            thirdModuleRef.stopMediaRain?.();
+        }
+    } catch (e) {
+        /* ignore */
+    }
+
+    third.classList.add("fade-out");
+    setTimeout(() => {
+        third.style.display = "none";
+        second.style.display = "block";
+        second.classList.add("fade-in");
+    }, 800);
+}
+
+window.addEventListener("load", () => {
+    const backBtn = document.getElementById("backButton");
+    if (backBtn) {
+        backBtn.addEventListener("click", backToSecondContent);
+    }
 });
 
+// --- END - Nút BACK --- */
+
+// --- START - NỘI DUNG --- */
+let _captionTypeTimer = null;
+
+function stopTypeCaption() {
+  if (_captionTypeTimer) {
+    clearTimeout(_captionTypeTimer);
+    _captionTypeTimer = null;
+  }
+}
+
+// (tuỳ chọn) escape để an toàn nếu text có kí tự HTML đặc biệt
+function _escapeHTML(s) {
+  return String(s).replace(/[&<>"']/g, m => (
+    { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m]
+  ));
+}
+
+/**
+ * Gõ chữ vào phần tử caption theo kiểu typewriter.
+ * - Tự chuyển \n -> <br>
+ * - speed: ms/ký tự (mặc định 22ms)
+ */
+function typeCaption(el, text, speed = 30) {
+  stopTypeCaption();
+  el.innerHTML = "";
+  const safe = _escapeHTML(text || "");
+  let i = 0;
+
+  const step = () => {
+    el.innerHTML = safe.slice(0, i).replace(/\n/g, "<br>");
+    i++;
+    if (i <= safe.length) {
+      _captionTypeTimer = setTimeout(step, speed);
+    } else {
+      _captionTypeTimer = null;
+    }
+  };
+
+  step();
+}
+// --- END - NỘI DUNG --- */

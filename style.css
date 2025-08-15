@@ -1,13 +1,21 @@
 body {
-    font-family: "Great Vibes", cursive;
-}
-@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap");
-
-body {
     margin: 0;
     padding: 0;
-    background-color: black;
+    display: flex;
+    min-height: 100dvh;
     overflow: hidden;
+
+    font-family: "Great Vibes", cursive;
+    font-size: 1em;
+    line-height: 1.4;
+
+    color: hsl(180 68% 5%);
+    background-color: black;
+    background-image: radial-gradient(
+        circle farthest-corner at 50% 50%,
+        hsl(187 20% 0%) 30%,
+        hsl(149 20% 0%) 100%
+    );
 }
 
 #star-field {
@@ -148,18 +156,20 @@ body {
 /* Giao diện cảnh báo xoay ngang */
 #rotate-warning {
     position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    width: 100vw;
-    height: 100vh;
-    background: black;
-    color: white;
-    display: none;
+    inset: 0;
+    z-index: 99999;
+    display: none; /* JS sẽ bật khi xoay dọc */
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    text-align: center;
+    background: #000;
+    color: #fff;
+}
+
+/* Khi khóa xoay (đang xoay dọc) → ẩn mèo + tim bay + sao băng */
+body.rotate-lock .meo-bantim,
+body.rotate-lock .heart-flight,
+body.rotate-lock #heart-container {
+    display: none !important;
 }
 
 /* Icon điện thoại */
@@ -366,22 +376,6 @@ body {
     background: transparent; /* nền trong suốt */
 }
 
-body {
-    /* or any other parent wrapper */
-    margin: 0;
-    display: flex;
-    min-height: 100dvh;
-    perspective: 1000px;
-    font: 1em/1.4 "Poppins", sans-serif;
-    overflow: hidden;
-    color: hsl(180 68% 5%);
-    background-image: radial-gradient(
-        circle farthest-corner at 50% 50%,
-        hsl(187 20% 0%) 30%,
-        hsl(149 20% 0%) 100%
-    );
-}
-
 /* Khung bao để căn giữa */
 .book-wrapper {
     display: flex;
@@ -395,7 +389,7 @@ body {
 .book {
     position: relative;
     display: flex;
-    height: 80vh; /* 🔹 Chiều cao cố định tối đa */
+    height: 70vh; /* 🔹 Chiều cao cố định tối đa */
     width: 80vh; /* Tự tính theo tỷ lệ trang */
     max-height: 70vh;
     pointer-events: none;
@@ -403,6 +397,9 @@ body {
     transition: translate 1s;
     translate: calc(min(var(--c), 1) * 50%) 0%;
     rotate: 1 0 0 30deg;
+}
+.book.snap-center {
+    translate: 100% 0 !important; /* quay về bên phải */
 }
 
 .page {
@@ -436,7 +433,6 @@ body {
     height: 100%;
     backface-visibility: hidden;
     overflow: hidden;
-    background-color: transparent;
     /* Fix backface visibility Firefox: */
     translate: 0px;
 }
@@ -517,32 +513,50 @@ body {
 }
 
 .front.cover {
-    background: none !important;
+    background: #000;
     background-image: none !important;
     padding: 0;
 }
 
-.front.cover img {
+.front.cover img,
+.back.cover img {
+    max-height: 100%; /* Không vượt quá chiều cao của book */
+    width: auto; /* Giữ tỉ lệ ảnh */
     display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    margin: 0 auto; /* Căn giữa ngang */
+    object-fit: contain; /* Đảm bảo ảnh không bị méo */
+    background-color: #000;
+}
+
+.back.cover.end {
+    background: #000; /* nền đen */
+    padding: 0;
+    overflow: hidden; /* tránh tràn ảnh */
+}
+
+/* Ảnh trong back cover end */
+.back.cover.end > img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* giữ tỉ lệ, không cắt */
+    margin: 0 auto; /* căn giữa ngang */
+    background: #000; /* nền đen nếu ảnh nhỏ */
 }
 
 #nextButton {
     opacity: 0; /* ban đầu ẩn */
     pointer-events: none; /* không click khi ẩn */
     position: absolute;
-    bottom: 20px;
+    bottom: 10px;
     right: 20px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #ff69b4;
+    padding: 10px 10px;
+    font-size: 3.5rem;
+    background-color: rgba(255, 105, 180, 0.0);
     color: white;
     border: none;
     border-radius: 20px;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
     z-index: 30;
     transition: opacity 1s ease; /* hiệu ứng mờ dần */
 }
@@ -560,11 +574,12 @@ body {
 #thirdContent {
     position: fixed;
     inset: 0;
-    display: flex; /* bạn có thể đổi sang block nếu muốn */
+    display: flex;
     align-items: center;
     justify-content: center;
     background: transparent;
     z-index: 20;
+    overflow: visible;
 }
 
 /* Lớp mưa chữ */
@@ -585,7 +600,6 @@ body {
     font-weight: 700;
     font-size: clamp(16px, 2.2vw, 28px);
     color: #fff;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
     opacity: 0.95;
     animation: drop var(--dur, 3s) linear forwards;
     pointer-events: none;
@@ -605,18 +619,6 @@ body {
     color: #ff66b2;
     font-weight: bold;
     opacity: var(--itemAlpha, 1);
-    text-shadow: 0 0 4px rgba(255, 102, 178, 0.9),
-        0 0 8px rgba(255, 102, 178, 0.7), 0 0 16px rgba(255, 102, 178, 0.5),
-        0 0 32px rgba(255, 102, 178, 0.3), 0 0 48px rgba(255, 102, 178, 0.15);
-}
-
-/* Các bóng (ghost) không viền sáng, chỉ hồng mờ */
-.rain-item .ghost {
-    font-family: "Great Vibes", cursive;
-    font-size: 2.2rem;
-    color: #ff66b2;
-    opacity: var(--alpha, 0.5);
-    text-shadow: none;
 }
 
 .rain-item .ghost {
@@ -640,11 +642,6 @@ body {
     }
 }
 
-/* Toàn màn cho container mưa ảnh */
-#thirdContent {
-    overflow: visible;
-} /* cho phép tràn dưới */
-/* Container mưa media (ảnh + video) */
 .media-rain {
     position: absolute;
     inset: 0;
@@ -664,20 +661,11 @@ body {
     opacity: 0.98;
 }
 
-/* Ảnh trong media */
-.rain-media img {
-    display: block;
-    width: var(--w, 120px);
-    height: var(--h, 160px);
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-/* Video trong media */
+.rain-media img,
 .rain-media video {
     display: block;
-    width: var(--w, 120px);
-    height: var(--h, 160px);
+    width: calc(var(--w, 120px) * 0.7); /* giảm 30% */
+    height: calc(var(--h, 160px) * 0.7); /* giảm 30% */
     object-fit: cover;
     border-radius: 10px;
 }
@@ -689,120 +677,15 @@ body {
     transform: translateX(-50%);
 }
 
-.back.video-page > video {
-    position: static !important; /* bỏ absolute/inset cũ */
-    inset: auto !important;
-    transform: none !important;
-
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain !important; /* hiển thị toàn bộ khung hình */
-    display: block;
-}
-
-.back.video-page {
-    position: relative;
-    padding: 0 !important;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden; /* OK giữ lại, nhưng video sẽ không vượt */
-    background: #000; /* nền letterbox nếu tỉ lệ khác */
-}
-
 /* Trang front hiển thị full, bỏ padding để ảnh tràn khung đẹp */
 .front {
     padding: 0 !important;
     overflow: hidden;
 }
 
-/* Lưới 2 cột cân nhau, cao bằng trang */
-.front .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    height: 100%;
-}
-
-/* Cột trái chứa 1 ảnh */
-.front .col-left {
-    height: 100%;
-    width: 100%;
-}
-.col-left {
-    width: 100%;
-    height: 100%;
-    overflow: hidden; /* ẩn phần thừa nếu có */
-    margin-left: 0px;
-    margin-right: 0px;
-}
-
-.col-left img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* vừa khung, không cắt */
-    display: block;
-}
-
-/* Cột phải chia 2 hàng bằng nhau */
-.front .col-right {
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    gap: 8px;
-    height: 100%;
-}
-
-/* Ảnh fill khung, không méo, cắt phần thừa nếu cần */
-.front .two-col img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    border-radius: 6px; /* tuỳ thích, bỏ nếu không cần */
-}
-
-/* Responsive (tuỳ chọn): dưới 640px chuyển thành 2 hàng */
-@media (max-width: 640px) {
-    .front .two-col {
-        grid-template-columns: 1fr;
-        grid-auto-rows: 1fr;
-    }
-    .front .col-right {
-        grid-template-rows: 1fr 1fr;
-    }
-}
-
-.back.video-page {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center; /* canh giữa ngang */
-    align-items: center; /* canh giữa dọc */
-    background-color: black; /* hoặc màu nền bạn muốn */
-}
-
-.back.video-page video {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain; /* đảm bảo không crop */
-    display: block;
-}
-
 .back {
     position: relative; /* Làm mốc cho caption */
     height: 100%; /* Full chiều cao của book page */
-}
-
-.back img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Lấp đầy khung ảnh */
-    display: block;
 }
 
 .back .video-caption {
@@ -818,13 +701,6 @@ body {
     box-sizing: border-box;
 }
 
-.front img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Lấp đầy khung, giữ tỉ lệ */
-    display: block;
-}
-
 .front .image-caption {
     position: absolute;
     bottom: 0; /* Dính đáy ảnh */
@@ -836,226 +712,6 @@ body {
     background: rgba(0, 0, 0, 0.4); /* Nền mờ để chữ nổi bật */
     text-align: center;
     box-sizing: border-box;
-}
-
-.front.video-page,
-.back.video-page {
-    position: relative;
-    height: 100%; /* Bằng chiều cao của book */
-    overflow: hidden;
-}
-
-.front.video-page .video-caption,
-.back.video-page .video-caption {
-    position: absolute;
-    bottom: 0; /* Dính đáy video */
-    left: 0;
-    width: 100%;
-    padding: 8px 12px;
-    font-size: 1rem;
-    color: white;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.4); /* Nền mờ */
-    box-sizing: border-box;
-}
-
-.front.video-page video,
-.back.video-page video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Lấp đầy khung, giữ tỉ lệ */
-    display: block;
-}
-
-.back.four-images {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    background-color: #000; /* nền đen */
-}
-
-.back.four-images figure {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.back.four-images img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Fill toàn bộ khung, cắt phần thừa */
-    display: block;
-}
-
-/* Đảm bảo page chiếm đúng khung của book */
-.book {
-    height: 70vh;
-    max-height: 70vh;
-}
-.page,
-.front,
-.back {
-    height: 100%;
-}
-
-/* 4 video chia đều, không khoảng hở, không vượt khung */
-.front.four-videos {
-    height: 100%;
-    width: 100%;
-    background-color: #000; /* nền đen nếu muốn */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 !important;
-}
-
-.back.four-images .grid-4 {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 5px;
-    width: 100%;
-    height: 100%;
-}
-.front.four-videos .grid-4 {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 5px;
-    width: 100%;
-    height: 100%;
-}
-
-.front.four-videos .grid-4 figure {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.front.four-videos .grid-4 figure video {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* giữ nguyên tỉ lệ, không bị cắt */
-    display: block;
-}
-
-.back.four-images .grid-4 figure {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.back.four-images .grid-4 figure img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* giữ tỉ lệ, không bị cắt */
-    display: block;
-}
-
-.front.four-videos figure {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden; /* cắt phần video thừa nếu có */
-}
-
-.front.four-videos video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* fill kín ô, giữ tỉ lệ */
-    display: block;
-}
-
-/* Đảm bảo trang bằng chiều cao book */
-.page,
-.front,
-.back {
-    height: 100%;
-}
-
-/* Lưới 25 ô 5x5, phủ kín khung trang */
-.back.media-25 {
-    padding: 0 !important;
-    overflow: hidden;
-}
-.back.media-25 .grid-25 {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    gap: 0; /* không khoảng hở; tăng lên 2-4px nếu muốn viền */
-    width: 100%;
-    height: 100%;
-}
-
-.back.media-25 figure {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden; /* cắt phần thừa để không tràn ô */
-}
-
-.back.media-25 img,
-.back.media-25 video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* fill kín ô, giữ tỉ lệ */
-    display: block;
-}
-
-.back.media-25 video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-/* Trang media 25 ô – áp dụng cho cả front/back */
-.front.media-25,
-.back.media-25 {
-    padding: 0 !important;
-    overflow: hidden;
-    height: 100%;
-}
-.front.media-25 .grid-25,
-.back.media-25 .grid-25 {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    gap: 0; /* tăng lên 2–4px nếu muốn có rãnh */
-    width: 100%;
-    height: 100%;
-}
-.front.media-25 figure,
-.back.media-25 figure {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-.front.media-25 img,
-.back.media-25 img,
-.front.media-25 video,
-.back.media-25 video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.grid-25 img,
-.grid-25 video {
-    border-radius: 10px; /* hoặc 50% nếu muốn bo tròn */
-    overflow: hidden;
-    display: block; /* đảm bảo không bị khoảng trắng */
 }
 
 .meo-bantim {
@@ -1080,18 +736,159 @@ body {
     will-change: transform, opacity;
 }
 
-.front.cover video {
+/* Cập nhật 12/8
+/* --- START - ảnh /video trong book --- */
+.book .front img,
+.book .back img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Giữ tỷ lệ nhưng lấp đầy khung */
+    object-fit: contain !important; /* hiển thị toàn bộ ảnh, không crop */
     display: block;
+    border-radius: 0 !important; /* không bo tròn góc ảnh */
 }
 
-.back video,
-.front video {
-    max-height: 100%; /* Không vượt quá chiều cao của book */
-    width: auto; /* Giữ tỷ lệ gốc */
-    object-fit: contain; /* Đảm bảo toàn bộ video hiển thị trong khung */
-    display: block;
-    margin: 0 auto; /* Căn giữa ngang */
+/* Nếu khung có padding, viền… muốn ảnh sát khung thì bỏ padding: */
+.book .front,
+.book .back {
+    padding: 0; /* tuỳ ý: nếu bạn vẫn cần caption, giữ padding */
+    overflow: hidden; /* tránh tràn viền khi tỉ lệ khác nhau */
+    background-color: #fff; /* “letterbox” màu trắng xung quanh ảnh */
 }
+
+.book .front video,
+.book .back video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain !important; /* Giữ nguyên tỷ lệ, không mất góc */
+    display: block;
+    border-radius: 0 !important;
+    background-color: #000; /* tuỳ bạn muốn nền gì khi có viền trống */
+}
+
+.book .front,
+.book .back {
+    padding: 0;
+    overflow: hidden;
+}
+/* --- END - CSS ảnh /video trong book --- */
+
+/* --- START - Vùng nhấp xem ảnh --- */
+.book .front .hotspot,
+.book .back .hotspot {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.7); /* nền trắng 50% như yêu cầu */
+    border: 0; /* không viền */
+    cursor: pointer;
+    z-index: 12;
+}
+
+/* --- Lightbox hiển thị ảnh popup --- */
+#asset-lightbox {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2147483645;
+}
+#asset-lightbox.open {
+    display: flex;
+}
+#asset-lightbox img {
+    max-width: min(92vw, 1200px);
+    max-height: 92vh;
+    object-fit: contain;
+    display: block;
+
+    opacity: 0;
+    transition: opacity 1000ms ease; /* mượt 0.3s */
+    will-change: opacity;
+}
+#asset-lightbox img.show {
+    opacity: 1;
+} /* mở: hiện dần */
+#asset-lightbox.closing img {
+    opacity: 0;
+} /* đóng: mờ dần */
+
+@media (prefers-reduced-motion: reduce) {
+    #asset-lightbox img {
+        transition: none !important;
+    }
+}
+#asset-lightbox .close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font: 600 18px/1 system-ui, sans-serif;
+    color: #fff;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+/* --- END - Vùng nhấp xem ảnh --- */
+
+/* --- START - Nút BACK --- */
+/* Back giống Next nhưng ở góc trái, mặc định ẩn */
+#backButton {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #ff69b4;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
+    z-index: 30;
+    transition: opacity 1s ease, transform 0.2s ease;
+}
+#backButton.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+#backButton:hover {
+    transform: scale(1.05);
+}
+/* --- END - Nút BACK --- */
+
+/* --- START - NỘI DUNG --- */
+.lightbox-figure { position: relative; margin: 0; }
+.lightbox-figure > img {
+  display:block;
+  max-width:min(92vw,1200px);
+  max-height:92vh;
+  object-fit:contain;
+}
+.lightbox-figure > img.rounded {
+  border-radius: 16px;          /* đổi 16px tuỳ ý */
+  overflow: hidden;             /* để caption bám viền gọn */
+}
+.lightbox-caption {
+  position: absolute;
+  top: 10%;             /* cách đỉnh ảnh 10% */
+  left: 0;
+  max-width: 70%;
+  padding: 8px 12px;
+  font: 500 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: #000000;
+  text-align: left;
+  background: rgba(0,0,0,0.0);
+  backdrop-filter: blur(2px);
+  border-bottom-right-radius: 6px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .25s ease, transform .25s ease;
+  pointer-events: none;
+}
+#asset-lightbox.open .lightbox-caption.has-text {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* --- END - NỘI DUNG --- */
+

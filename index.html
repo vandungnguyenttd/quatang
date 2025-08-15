@@ -4,14 +4,33 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Đêm Sao Lung Linh</title>
+          <style>
+            #boot-loader{
+              position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+              background:#000;z-index:2147483646;transition:opacity .35s ease;
+            }
+            #boot-loader .boot-spinner{
+              width:56px;height:56px;border:4px solid rgba(255,255,255,.25);
+              border-top-color:#fff;border-radius:50%;animation:boot-spin 1s linear infinite;
+            }
+            @keyframes boot-spin{to{transform:rotate(360deg)}}
+            /* Khi app sẵn sàng → ẩn loader */
+            html.ready #boot-loader{opacity:0;pointer-events:none;visibility:hidden}
+          </style>
         <link rel="stylesheet" href="./style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link
             href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap"
             rel="stylesheet"
         />
-        
+        <link rel="preload" as="image" href="./assets/images/img17.webp" fetchpriority="high" imagesrcset="./assets/images/img17.webp 1x">
+        <link rel="icon" href="data:,">
     </head>
     <body>
+        <div id="boot-loader" role="status" aria-live="polite" aria-label="Đang tải...">
+          <div class="boot-spinner"></div>
+        </div>
         <div id="heart-container"></div>
         <canvas id="shooting-canvas"></canvas>
         <div id="star-field"></div>
@@ -25,7 +44,7 @@
         <div id="mainContent">
             <div class="center-content">
                 <img
-                    src="./assets/images/img17.JPG"
+                    src="./assets/images/img17.webp"
                     alt="Avatar"
                     class="avatar-image"
                 />
@@ -35,11 +54,9 @@
                     id="startButton"
                     onclick="handleStart()"
                 >
-                    💫 BẮT ĐẦU
+                BẮT ĐẦU
                 </button>
             </div>
-            <div id="heart-container"></div>
-            <canvas id="shooting-canvas"></canvas>
             <img
                 src="./assets/meobantim.gif"
                 alt="Mèo bạn tim"
@@ -53,568 +70,192 @@
                 <div class="book">
                     <div class="page">
                         <div class="front cover">
-                            <video
-                                src="./assets/video/video5.mp4"
-                                autoplay
-                                muted
-                                loop
-                                playsinline
-                            ></video>
-                        </div>
-                        <div class="back">
-                            <video
-                                src="assets/video/video9.mp4"
-                                autoplay
-                                muted
-                                loop
-                                playsinline
-                            ></video>
-                        </div>
-                    </div>
-
-                    <div class="page">
-                        <div class="front">
-                            <div class="two-col">
-                                <!-- Cột 1: 1 ảnh -->
-                                <figure class="col-left">
-                                    <img
-                                        src="./assets/images/img29.WEBP"
-                                        alt="Left"
-                                    />
-                                </figure>
-
-                                <!-- Cột 2: 2 ảnh -->
-                                <div class="col-right">
-                                    <figure>
-                                        <img
-                                            src="./assets/images/img15.JPG"
-                                            alt="Top"
-                                        />
-                                    </figure>
-                                    <figure>
-                                        <img
-                                            src="./assets/images/img25.WEBP"
-                                            alt="Bottom"
-                                        />
-                                    </figure>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="back">
-                            <img src="./assets/images/img10.JPG" alt="Img 1" />
-                        </div>
-                    </div>
-
-                    <div class="page">
-                        <div class="front">
                             <img
-                                src="./assets/images/img14.JPG"
-                                alt="Ảnh minh họa"
+                                data-asset="img43"
+                                alt="Bia"
                             />
                         </div>
-                        <div class="back video-page">
-                            <video
-                                src="./assets/video/video1.mov"
-                                autoplay
-                                muted
-                                loop
-                                playsinline
-                            ></video>
-                        </div>
-                    </div>
-
-                    <div class="page">
-                        <div class="front video-page">
-                            <video
-                                src="./assets/video/video2.mov"
-                                autoplay
-                                muted
-                                loop
-                                playsinline
-                            ></video>
-                        </div>
-                        <div class="back four-images">
-                            <div class="grid-4">
-                                <figure>
-                                    <img
-                                        src="./assets/images/img28.WEBP"
-                                        alt="Ảnh 1"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img30.WEBP"
-                                        alt="Ảnh 2"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img32.WEBP"
-                                        alt="Ảnh 3"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img35.WEBP"
-                                        alt="Ảnh 4"
-                                    />
-                                </figure>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="page">
-                        <div class="front four-videos">
-                            <div class="grid-4">
-                                <figure>
-                                    <video
-                                        src="./assets/video/video4.mov"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                                <figure>
-                                    <video
-                                        src="./assets/video/video6.mp4"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                                <figure>
-                                    <video
-                                        src="./assets/video/video2.mov"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                                <figure>
-                                    <video
-                                        src="./assets/video/video8.mp4"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                            </div>
-                        </div>
-
-                        <div class="back media-25">
-                            <div class="grid-25">
-                                <figure>
-                                    <img
-                                        src="./assets/images/img7.JPG"
-                                        alt="img7"
-                                    />
-                                </figure>
-                                <figure>
-                                    <video
-                                        src="./assets/video/video5.MP4"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img2.JPG"
-                                        alt="img2"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img9.JPG"
-                                        alt="img9"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img4.JPG"
-                                        alt="img4"
-                                    />
-                                </figure>
-
-                                <figure>
-                                    <img
-                                        src="./assets/images/img11.JPG"
-                                        alt="img11"
-                                    />
-                                </figure>
-                                <figure>
-                                    <video
-                                        src="./assets/video/video4.mov"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                                <figure>
-                                    <video
-                                        src="./assets/video/video2.mov"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                                <figure>
-                                    <video
-                                        src="./assets/video/video1.mov"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img15.JPG"
-                                       alt="img15"
-                                    />
-                                </figure>
-
-                                <figure>
-                                    <img
-                                        src="./assets/images/img18.WEBP"
-                                        alt="img18"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img6.JPG"
-                                        alt="img6"
-                                    />
-                                </figure>
-                                <figure>
-                                    <video
-                                        src="./assets/video/video3.mov"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img13.JPG"
-                                        alt="img13"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img3.JPG"
-                                        alt="img3"
-                                    />
-                                </figure>
-
-                                <figure>
-                                    <img
-                                        src="./assets/images/img12.JPG"
-                                        alt="img12"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img8.JPG"
-                                        alt="img8"
-                                    />
-                                </figure>
-                                <figure>
-                                    <video
-                                        src="./assets/video/video1.mov"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img1.JPG"
-                                        alt="img1"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img16.JPG"
-                                        alt="img16"
-                                    />
-                                </figure>
-
-                                <figure>
-                                    <img
-                                        src="./assets/images/img19.WEBP"
-                                        alt="img19"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img5.JPG"
-                                        alt="img5"
-                                    />
-                                </figure>
-                                <figure>
-                                    <video
-                                        src="./assets/video/video3.mov"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img20.WEBP"
-                                        alt="img20"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img10.JPG"
-                                        alt="img10"
-                                    />
-                                </figure>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="page">
-                        <div class="front media-25">
-                            <div class="grid-25">
-                                <figure>
-                                    <img
-                                        src="./assets/images/img34.WEBP"
-                                        alt="img34"
-                                    />
-                                </figure>
-                                <figure>
-                                    <video
-                                        src="./assets/video/video6.MP4"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img28.WEBP"
-                                        alt="img28"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img39.WEBP"
-                                        alt="img39"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img21.WEBP"
-                                        alt="img21"
-                                    />
-                                </figure>
-
-                                <figure>
-                                    <img
-                                        src="./assets/images/img35.WEBP"
-                                        alt="img35"
-                                    />
-                                </figure>
-                                <figure>
-                                    <video
-                                        src="./assets/video/video7.MP4"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img26.WEBP"
-                                        alt="img26"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img33.WEBP"
-                                        alt="img33"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img37.WEBP"
-                                        alt="img37"
-                                    />
-                                </figure>
-
-                                <figure>
-                                    <video
-                                        src="./assets/video/video9.MP4"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img25.WEBP"
-                                        alt="img25"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img31.WEBP"
-                                        alt="img31"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img38.WEBP"
-                                        alt="img38"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img27.WEBP"
-                                        alt="img27"
-                                    />
-                                </figure>
-
-                                <figure>
-                                    <img
-                                        src="./assets/images/img41.WEBP"
-                                        alt="img41"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img24.WEBP"
-                                        alt="img24"
-                                    />
-                                </figure>
-                                <figure>
-                                    <video
-                                        src="./assets/video/video8.MP4"
-                                        autoplay
-                                        muted
-                                        loop
-                                        playsinline
-                                    ></video>
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img40.WEBP"
-                                        alt="img40"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img29.WEBP"
-                                        alt="img29"
-                                    />
-                                </figure>
-
-                                <figure>
-                                    <img
-                                        src="./assets/images/img36.WEBP"
-                                        alt="img36"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img22.WEBP"
-                                        alt="img22"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img23.WEBP"
-                                        alt="img23"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img30.WEBP"
-                                        alt="img30"
-                                    />
-                                </figure>
-                                <figure>
-                                    <img
-                                        src="./assets/images/img32.WEBP"
-                                        alt="img32"
-                                    />
-                                </figure>
-                            </div>
-                        </div>
-
                         <div class="back">
-                            <p>
-                                Feel free to use and abuse this code. Drop me a
-                                line if you find it cool or useful, or just want
-                                to say <i>hi</i>.
-                            </p>
+                            <img data-asset="book1" alt="Book page 1"
+                            />
                         </div>
                     </div>
 
                     <div class="page">
                         <div class="front">
-                            <img
-                                src="https://picsum.photos/id/1073/600/600"
-                                alt="Img 2"
-                            />
+                          <img data-asset="book2" alt="Book page 2" />
                         </div>
-                        <div class="back cover">
-                            <h3>That's all, folks</h3>
-                            <p>
-                                FlipBook code and content:<br /><a
-                                    href="https://stackoverflow.com/users/383904/roko-c-buljan"
-                                    target="_blank"
-                                    rel="nofollow"
-                                    >Roko C. Buljan</a
-                                >
-                                <br />Original idea:<br /><a
-                                    href="https://stackoverflow.com/a/76978444/383904"
-                                    target="_blank"
-                                    rel="nofollow"
-                                    >Stack Overflow answer</a
-                                >
-                                <br />Images by: picsum.photos
-                            </p>
+                        <div class="back">
+                          <img data-asset="book3" alt="Book page 3" />
+                        </div>
+                    </div>
+
+                    <div class="page">
+                        <div class="front">
+                          <img data-asset="book4" alt="Book page 4" />
+                        </div>
+                        <div class="back">
+                          <img data-asset="book5" alt="Book page 5" />
+                        </div>
+                    </div>
+
+                    <div class="page">
+                        <div class="front">
+                          <img data-asset="book6" alt="Book page 6" />
+                        </div>
+                        <div class="back">
+                          <img data-asset="book7" alt="Book page 7" />
+                        </div>
+                    </div>
+
+                    <div class="page">
+                        <div class="front">
+                          <img data-asset="book8" alt="Book page 8" />
+                        </div>
+                        <div class="back">
+                          <img data-asset="book9" alt="Book page 9" />
+                        </div>
+                    </div>
+                    <div class="page">
+                        <div class="front">
+                          <img data-asset="book10" alt="Book page 10" />
+                        </div>
+                        <div class="back">
+                          <img data-asset="book11" alt="Book page 11" />
+                        </div>
+                    </div>
+
+                    <div class="page">
+                            <div class="front">
+                              <video data-asset="video1"
+                              autoplay
+                              muted
+                              playsinline
+                              webkit-playsinline
+                              loop></video>
+                            </div>
+                        <div class="back cover end">
+                          <img data-asset="book12" alt="Book page 12" />
                         </div>
                     </div>
                 </div>
             </div>
-            <button id="nextButton" onclick="goToThirdContent()">Next ➡</button>
+              <button id="nextButton" onclick="goToThirdContent()">
+  <img src="./assets/gift.gif" alt="Món quà" 
+       style="width:80x; height:80px; vertical-align:middle;">
+              </button>
         </div>
 
         <div id="thirdContent" style="display: none">
+            <button id="backButton" class="">Back</button>
             <div class="content-rain" aria-hidden="true"></div>
             <div class="media-rain" aria-hidden="true"></div>
         </div>
 
-        <script src="script.js"></script>
+        <script type="module" src="script.js" defer></script>
         <script>
-            function checkOrientation() {
-                const warning = document.getElementById("rotate-warning");
-                if (window.innerHeight > window.innerWidth) {
-                    warning.style.display = "flex";
-                } else {
-                    warning.style.display = "none";
-                }
-            }
+(function () {
+  function isShown(el){
+    const style = window.getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return false;
+    // el hoặc ancestor có thể hidden vì section ẩn → offsetParent null (trừ fixed)
+    const rect = el.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return false;
+    // Nếu section ẩn hoàn toàn, rect thường 0x0 → loại
+    return true;
+  }
 
-            window.addEventListener("load", checkOrientation);
-            window.addEventListener("resize", checkOrientation);
+  function collectVisibleMedia(){
+    const imgs = Array.from(document.querySelectorAll('img')).filter(isShown);
+    const vids = Array.from(document.querySelectorAll('video')).filter(isShown);
+    return { imgs, vids };
+  }
+
+  function waitImages(list){
+    return Promise.all(list.map(img => img.complete
+      ? Promise.resolve()
+      : new Promise(res => { img.addEventListener('load',res,{once:true}); img.addEventListener('error',res,{once:true}); })
+    ));
+  }
+
+  function waitVideos(list){
+    // Chỉ cần khung đầu (loadeddata)
+    return Promise.all(list.map(v => {
+      // đảm bảo nhẹ nhàng
+      if (!v.getAttribute('preload')) v.preload = 'metadata';
+      return (v.readyState >= 2)
+        ? Promise.resolve()
+        : new Promise(res => { v.addEventListener('loadeddata',res,{once:true}); v.addEventListener('error',res,{once:true}); });
+    }));
+  }
+
+  const waitFonts = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+
+  // 🔎 Thu media đang hiển thị ở thời điểm ban đầu
+  const { imgs: visibleImgs, vids: visibleVids } = collectVisibleMedia();
+
+  // ❌ Không hard-cap → chỉ ẩn khi xong thật
+  Promise.all([ waitImages(visibleImgs), waitVideos(visibleVids), waitFonts ])
+    .then(function(){
+      document.documentElement.classList.add('app-ready'); // mở UI
+      document.documentElement.classList.add('ready');     // ẩn loader
+      if (typeof window.bootHeavyStuff === 'function') window.bootHeavyStuff();
+    });
+})();
         </script>
+
+    <!-- START - Khai báo ảnh -->
+<script type="module">
+    import { Assets } from './assets.js';
+
+    /* 🔹 Preload sớm các asset ưu tiên */
+    Assets.preload('img43', 'image', 'high');                       // ảnh bìa
+    Assets.preloadBatch(Assets.rangeNames('book', 1, 12), 'image', 'high'); // 12 ảnh book
+    Assets.preload('video1', 'video');                              // video cuối sách
+    Assets.preload('chicanminhconhau', 'audio');
+    Assets.preload('thutay', 'image');
+    // Tự gán src cho tất cả phần tử có data-asset
+document.querySelectorAll('[data-asset]').forEach(el => {
+  const name = el.dataset.asset;
+  const src  = Assets.url(name);
+
+  if (el.tagName === 'IMG') {
+    el.src = src;
+  } else if (el.tagName === 'VIDEO') {
+    el.src = src;
+    el.playsInline = true;
+    el.muted = true;
+    el.autoplay = true;
+    el.loop = true;
+  } else if (el.tagName === 'AUDIO') {
+    el.src = src;           // ✅ gán src
+    el.preload = 'auto';
+  }
+});
+// Tự gán src và kích hoạt play cho video
+document.querySelectorAll('video[data-asset]').forEach(v => {
+  v.src = Assets.url(v.dataset.asset);
+  v.muted = true;
+  v.playsInline = true;
+
+  // Một số trình duyệt iOS cần gọi play() bằng JS để kích hoạt autoplay
+  v.play().catch(err => {
+    console.warn("Video autoplay bị chặn:", err);
+  });
+});
+</script>
+    <!-- END - Khai báo ảnh -->
+
+    <!-- START - Vùng nhấp xem ảnh --->
+
+<div id="asset-lightbox" aria-modal="true" role="dialog">
+  <button class="close" aria-label="Đóng">✕</button>
+  <figure class="lightbox-figure">
+    <img alt="Preview" />
+    <figcaption id="asset-caption" class="lightbox-caption"></figcaption>
+  </figure>
+    <!-- END - Vùng nhấp xem ảnh -->
+<audio id="bgAudio" data-asset="chicanminhconhau" preload="auto" loop></audio>
+
     </body>
 </html>
