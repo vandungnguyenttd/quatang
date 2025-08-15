@@ -3,13 +3,19 @@
   "cleanUrls": true,
   "headers": [
     {
-      "source": "./assets/(.*)\\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mp3|wav|woff2?)",
+      "source": "/assets/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
-      "source": "/(.*)\\.(?:css|js)",
+      "source": "/:path*.css",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/:path*.js",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
